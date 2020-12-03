@@ -1,0 +1,90 @@
+                                                paramiko 
+paramiko ：服务器远程管理  \ 远程拷贝
+
+1.准备三台虚拟机
+2.安装paramiko  
+
+ 
+---------------------------------------------------------------------------------------
+pip install paramiko  
+
+>>>python
+>>>import paramiko 
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())   #远程连接时 回答yes
+ssh.connect("192.168.22.130",username='root',password='123456')   #连接
+ssh.exec_command("touch /root/b.sh")
+
+command = 'id root; id develop'
+result = ssh.exec_command(command) 
+type(result)
+len(result)
+
+#执行命令后返回的数据是由三个类文件对象（输入，输出，错误）组成的元组。
+result[1].read() 
+result[2].read() 
+
+
+----------------------------------------------------------------------------------------------
+
+import paramiko
+
+def rcmd(host,passwd,cmd,user='root',port=22):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(host,username=user,password=passwd,port=port)
+    stdin,stdout,stderr = ssh.exec_command(cmd)
+    out = stdout.read()
+    err = stderr.read()
+    if out:
+        print('[%s] out:\n%s' %(host,out.decode()))
+    if err:
+        print('[%s] ERROR:\n%s' %(host,err.decode()))
+
+if __name__ == '__main__':
+    rcmd('192.168.22.130','123456','netstat -nultp')
+
+
+
+-----------------------------------------------------------------------------------------------
+
+import paramiko
+import getpass
+import sys,os
+import threading
+
+def rcmd(host,passwd,cmd,user='root',port=22):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(host,username=user,password=passwd,port=port)
+    stdin,stdout,stderr = ssh.exec_command(cmd)
+    out = stdout.read()
+    err = stderr.read()
+    if out:
+        print('[%s] out:\n%s' %(host,out.decode()))
+    if err:
+        print('[%s] ERROR:\n%s' %(host,err.decode()))
+
+if __name__ == '__main__':
+    # if len(sys.argv) !=3:
+    #     print('Uage: %s ipfile "command"' %sys.argv[0])
+    #     exit(1)
+    # if not os.path.isfile(sys.argv[1]):
+    #     print('No such file:',sys.argv[1])
+    #     exit(2)
+    # ipfile = sys.argv[1]
+    #command = sys.argv[2]
+    ipfile= "F:\server.txt"
+    #passwd = 'F:\passwd.txt'
+    #passwd = getpass.getpass()
+    with open(ipfile) as fjob:
+        for line in fjob:
+            ip = line.strip() #移除\n
+          #  t = threading.Thread(target=rcmd,args=(ip,passwd,command)) #多线程
+            t=threading.Thread(target=rcmd,args=(ip,'123456','id root'))  # 多线程
+            t.start()
+    #rcmd(ip,'123456','netstat -nutlp')   #单线程
+    #rcmd(ip,passwd,command)
+
+
+

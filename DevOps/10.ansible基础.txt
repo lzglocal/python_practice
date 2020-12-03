@@ -1,0 +1,46 @@
+                       ---------------------------------------------------------
+                                               ansible   
+
+一.安装  
+1.在线安装
+pip3 install ansible 
+yum -y install sshpass
+二.准备三台虚拟机用来测试  
+配置ip 和 主机名 
+192.168.22.130   192.168.22.131   192.168.22.132  
+
+三.扫描远程服务器的
+ssh-keyscan  192.168.22.13{1..3} >>/root/.ssh/know_hosts  
+（1）创建工作目录  
+mkdir  /opt/myansi  && cd /opt/myansi 
+
+(2) 创建配置文件   vim  ansible.cfg  
+[defaults]
+inventory = hosts
+remote_user= root 
+
+(3) 创建主机清单文件  vim hosts 
+[webservers]
+192.168.22.131
+192.168.22.132
+[DB]
+192.168.22.133
+
+(4) 配置名称解析 
+for i in {1..254} 
+do 
+echo -e "192.168.22.$i"\tnode$i.baidu.com >>/etc/hosts 
+done 
+
+
+(5) 测试ansible  
+ansible  all -m ping -K
+
+如果不成功打临时命令查询  ad -hoc 临时命令 
+ansible webservers -m shell -a "id root" -k      //webservers 是主机的组
+ansible 主机(组)  -m 模块  -a 参数 
+
+
+
+
+

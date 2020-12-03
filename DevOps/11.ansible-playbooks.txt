@@ -1,0 +1,133 @@
+                                      使用playbook
+
+Playbooks是Ansible的配置、部署、编排语言。
+• 它们可以被描述为一个需要希望远程主机执行命令的
+方案，或者一组程序运行的命令集合
+• Playbook由一到多个Play组成
+• 每个play可以指定哪些主机执行哪些任务
+• 执行任务一般通过调用模块来实现
+
+
+   
+                                  Yaml简介 
+
+Playbooks的格式是YAML
+• 语法做到最小化，意在避免 playbooks 成为一种编程语
+言或是脚本
+• 使用 YAML 是因为它像 XML 或 JSON 是一种利于人们读
+写的数据格式
+
+
+                                   Yaml语法 
+
+• 每一个 YAML 文件都是从一个列表开始
+
+• 列表中的每一项都是一个键值对, 通常它们被称为一个“哈希 或“字典”
+
+• 所有的 YAML 文件开始行都应该是 ---。这是 YAML 格式的一部分，表明一个文件的开始
+
+• 列表中的所有成员都开始于相同的缩进级别，并且使用一个 "- " 作为开头(一个横杠和一个空格)
+
+• 一个字典是由一个简单的 键: 值 的形式组成(冒号后面必须是一个空格)
+
+
+
+配置VIM  
+
+
+• Yaml的缩进不能使用tab键
+• 建议缩进为两个空格
+• 为了实现yml文件按tab键缩进两个空格，可以按以下方式
+对vim进行定制
+[root@python myansi]# cat ~/.vimrc
+set ai
+set ts=4
+set et
+autocmd FileType yaml setlocal sw=2 ts=2 et ai
+
+
+
+使用模块 ansible 模块 
+• Ansible的模块实际上就是一个个的python程序文件
+• Ansible执行任务就是通过调用这些模块来完成的
+• 查看模块列表
+ansible-doc -l | wc -l 
+ansible-doc -l |grep auth
+ansible-doc -l  authorized_key 
+
+
+------------------------------------------------------------------------------------------
+                                                  
+                                            通过playbook 和authorized_key 模块实现免密登录 
+
+mkdir ansible && cd ansible
+vim  ansible.cfg
+[defaults]
+inventory = hosts
+remote_user= root
+
+vim hosts
+[webservers]
+192.168.22.131
+[dbservers]
+192.168.22.132
+[backend]
+192.168.22.133
+
+
+
+                                                     创建playbook 
+
+ansible-doc authorized_key  #可以查看使用说明    例如：ansible-doc yum     |   ansible-doc service 
+
+ 
+cat  ssh_key.yml 
+
+---
+- name: upload ssh key
+  hosts: all
+  tasks: 
+   - name: Set authorized key
+     authorized_key:
+       user: root 
+       state: present 
+       key: "{{ lookup('file','/root/.ssh/id_rsa.pub')}}"
+
+ansible-playbook  ssh_key.yml -k    
+
+ansible-doc authorized_key  //可以查看使用说明  
+
+
+-------------------------------------------------------------------------
+11.在webservers上安装 httpd /php/php-mysql 并启动httpd服务
+在dbservers 上安装mariadb-server 并启动mariadb服务  
+
+---
+- name: webservers install httpd
+  hosts: webservers
+  tasks:
+   - name: Install the latest version of Apache
+     yum:
+         name: [httpd,php,php-mysql]
+         state: latest
+   - name: Start service httpd, if not started
+     service:
+         name: httpd
+         state: started
+         enabled: yes
+
+
+- name: dbservers install mariadb
+  hosts: dbservers
+  tasks:
+   - name: Install the latest version of mariadb
+     yum:
+         name: [mariadb,mariadb-server]
+         state: latest
+   - name: Start service mariadb, if not started
+     service:
+         name: mariadb
+         state: started
+         enabled: yes
+
+---------------------------------------------------------------------------

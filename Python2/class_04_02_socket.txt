@@ -1,0 +1,95 @@
+                                                       search 函数
+　　　　　　　　　　　　－－－－－－－－－－－－－－－－
+import re
+m = re.search("f..","seafood")
+m.group()                                     #得到 foo
+                                                    
+                                                      findall 
+                                         -----------------------------------
+re.findall("f..","seafood is food")    # 匹配所有 ，返回列表 
+["foo","foo"]
+                                          
+                                                     finditer 
+                                          ------------------------------------
+
+re.finditer("f..","seafood is food")        #不是直接返回列表，返回的是所有匹配对象的生成器   
+
+                                                        split
+                                          -----------------------------------
+re.split("\.|-","hello-world.tar.gz")                 # 以.和- 区分 字符串
+["hello","world","tar","gz"]  
+
+                                                         sub
+                                       ------------------------------------
+re.sub("n[a-z]me,"Niu","Hi name,Nice to meet you nbme!")
+"Hi Niu, Nice to meet you Niu!"
+
+"Hi name,Nice to meet you nbme!" .replace("name","Niu")   #用replace也可以替换
+
+                                                         compile 
+                                       --------------------------------------
+在进行大量匹配的时候，先把模式pattern 编译一下，可以提升效率
+patt = re.compile("f..")
+m = patt.search("seafood")
+m.group()
+
+______________________________________________________________________________________________________________
+
+案例1：分析Apache访问日志   
+
+编写一个Apache日志分析脚本
+1.统计每个客户端访问Apache服务器的次数
+2.将统计信息通过字典的方式显示出来
+3.分别统计客户端是Firefox 和MSIE的访问次数
+4.分别使用函数式编程和面向对象编程的方式实现
+
+import re
+def count_patt(fname,patt):
+    cpatt = re.compile(patt)
+    patt_dict = {}
+    with open(fname) as fobj:
+        for line in fobj:
+            m = cpatt.search(line)
+            if m:
+                key = m.group()
+                patt_dict[key] = patt_dict.get(key,0) +1
+    return patt_dict
+
+if __name__ == '__main__':
+    fname = r"D:\a\access_log"
+    ip = "^(\d+\.){3}\d+"
+    br = "Chrome|Firefox|MSIE"
+    print(count_patt(fname,ip))
+    print(count_patt(fname,br))
+
+————————————————————————————————
+import re
+from collections import Counter
+
+class CountPatt:
+    def __init__(self,patt):
+        self.cpatt = re.compile(patt)
+
+    def count_patt(self,fname):
+       # cpatt=re.compile(patt)
+       # patt_dict={}
+        result = Counter()
+        with open(fname) as fobj:
+            for line in fobj:
+                m=self.cpatt.search(line)
+                if m:
+                    key=m.group()
+                    result.update([key])
+                   # patt_dict[key]=patt_dict.get(key,0) + 1
+        # return patt_dict
+        return result
+if __name__ == '__main__':
+    fname=r"D:\a\access_log"
+    ip="^(\d+\.){3}\d+"
+    cp = CountPatt(ip)
+    print(cp.count_patt(fname))
+
+______________________________________________________________________________________
+
+
+  

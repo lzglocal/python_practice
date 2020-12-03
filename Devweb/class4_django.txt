@@ -1,0 +1,105 @@
+                                                   Django   
+----------------------------------------------------------------
+
+基于Python的框架
+Django  ：功能强大，应用广泛
+tornado：小型框架
+flask : 微型框架
+
+用于创建模型的对象关系映射
+为最终用户设计的完美管理界面
+一流的URL 设计
+设计者友好的模板语言
+缓存系统
+
+虚拟环境: 为了保持系统的整洁与易于维护环境，采用虚拟环境，虚拟环境就是一个隔离的Python
+它是一个目录，激活后，安装模块都是安装到虚拟环境了，当项目结束后，
+清理环境只要把这个目录删除即可
+
+新建虚拟环境：
+1.调用Python的venv模块创建虚拟环境
+Python3 -m venv /opt/djenv/
+2.激活虚拟环境
+source /opt/djenv/bin/activate
+3.退出虚拟环境
+deactivate 
+
+----------------
+安装Django
+pip install * 
+Python
+import Django
+
+-------------
+创建Django项目
+manage.py    #用于管理项目  （创建app，创建数据库、管理员）
+mysite里面有：
+  _init_.py
+  settings.py    #项目的配置文件 
+ usrl.py          #路由系统urlconfig、程序入口
+wsgi.py      #用于部署项目到web服务器
+
+
+----------------
+2. 启动Django自带的web服务器测试
+Python manage.py runserver  
+
+
+配置pycharm 使用虚拟环境
+file--> setting ->project day4 -> project interpreter -> 点右上角的齿轮，add local ->选择下面的
+existing ，勾选make global ，点击右侧... 在弹出的对话框中输出的对话框输出/opt/djenv/bin/python 
+
+4.创建MySQL 数据库，用于存储Django项目的数据
+create database django default charset utf8；
+
+5.修改Django配置setting.py   
+allowed_hosts = "*"   # 允许所有的客户端访问
+database ={
+"engine": django.db.backends.mysql,
+"name":"django",
+"user"："root",
+"password"："tedu.cn",
+"HOST":"127.0.0.1",
+"PORT":"3306"
+}
+}
+LANGUAGE_CODE = "ZH_hans"
+TIME_ZONE="Asia/Shanghai"
+USE_TZ =False
+
+ 6. 配置Django 使用mysql 模块   修改 mysite/_init_.py  目录下的文件
+ 
+import pymysql 
+pymysql.install__as_MySQLdb()
+
+7.启动测试服务器运行在所有地址的80端口
+(djenv)  python manage.py runsesrver 0:80 
+
+8. 生成django缺省的数据库表 
+(djenv)   python manage.py makemigrations 
+(djenv)  python manage.py  migrate
+
+9. 创建管理账号，密码必须8位以上，要复杂度
+python manage.py  createuperuser 
+
+10.访问后台http://127.0.0.1/admin    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

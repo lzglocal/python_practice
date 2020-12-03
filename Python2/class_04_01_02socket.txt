@@ -1,0 +1,182 @@
+                                                      socket模块              
+                                               -----------------------
+套接字 
+套接字是一种具有“通讯端点” 概念的计算机网络数据结构   
+家族名  为    AF_UNIX    
+基于网络的 ，家族名   为  AF_INET  
+
+面向连接与无连接
+无论你使用哪一种地址家族，套接字的类型只有两种。
+               一种是面向连接的套接字，
+              另一种是无连接的套接字
+
+面向连接的主要协议就是传输控制协议TCP ,套接字类型为      SOCK_STREAM   
+                                   -----------------                             ---------------
+无连接的主要协议是用户数据报协议UDP ,套接字类型为      SOCK_DGRAM 
+                                   -----------------                           --------------
+
+——————————————————————————————————————————————
+Python中使用socket模块中的socket函数实现套接字的创建  
+                                                   
+                                                       创建TCP服务器
+                                                     ---------------------
+
+
+创建TCP服务器的主要步骤如下：
+1.创建服务器套接字：s = socket.socket()     
+2.绑定地址到套接字：s.bind()        
+3.启动监听：s.listen()  
+4.接受客户端连接：s.accept()
+5.与客户端通信: recv()/send()
+6.关闭套接字:  s.close()
+
+-----------------
+import socket
+host = ""                                                         #代表0.0.0.0  
+port = 12345                                                            #应该大于1024  
+addr = (host,port)        
+s = socket.socket()                                                            #默认使用TCP协议
+s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)  #设置套接字选项，使得服务程序结束后立即再启动
+s.bind(addr)
+s.listen(1)                                                                       #一般只能写到5以内，表示允许多少客户端排队访问
+cli_sock,cli_addr = s.accept()  
+print("客户端：",cli_addr)
+data = cli_sock.recv(1024)                                          #相当于fobj.read(1024)
+print(data)
+print(data.decode())
+sdata = "欢迎！\r\n"
+cli_sock.send(sdata.encode())                          #发送的数据必需是bytes类型，二进制
+cli_sock.close()
+s.close()
+
+----------------------------------------------------------------------------------------------------------
+
+                                         Python中所有的字符有：str类型和bytes类型     
+
+str类型转换为bytes类型   （ encode 和 decode ）
+
+a = "你好"
+type（a）
+<class "str">  
+a.encode()                   #将str 转换为bytes 
+b'xe4\xbd\xa0\xe5\xa5\xbd'
+
+
+b = b"Hello"
+tyep(b)
+<class "bytes">
+b.decode()                    #将bytes转换为str  
+
+________________________________________________________________________________________________________________
+                                                                 创建TCP客户端  
+创建TCP 客户端的步骤主要如下  ：
+1.创建客户端套接字：cs = socket.socket()
+2.尝试连接服务器： cs=connet()
+3.与服务器通信：cs.send()/cs.recv()  
+4.关闭客户端套接字：cs.close()   
+
+
+
+import socket
+
+host = "127.0.0.1"
+port = "12345"
+addr = (host,port)
+c = socket.socket()
+c.connect(addr)
+c.send(b"Hello World!\r\n")
+data = c.recv(1024)
+print(data.decode(),end="")
+c.close()
+
+
+-------------------------------------------------------------------------------------------------------
+                                                                 创建UDP服务器 
+
+创建UDP服务器的主要步骤如下：
+1.创建服务器套接字：s =socket.socket()
+2.绑定服务器套接字：s.bind()
+3.接收、发送数据: s.recvfrom()/ss.sendto()
+4.关闭套接字: s.close()  
+------------------------------------
+import socket
+
+host = ""
+port = 12345
+addr = (host,port)
+s = socket.socket(type=socket.SOCK_DGRAM)
+s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+s.bind(addr)
+
+data,cli_addr = s.recvfrom(1024)
+print(data.decode(),end="")
+s.sendto(b"How are you?\r\n",cli_addr)
+s.close()
+                   
+--------------------------------------
+
+UPD服务器循环
+import socket
+
+host = ""
+port = 12345
+addr = (host,port)
+s = socket.socket(type=socket.SOCK_DGRAM)
+s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+s.bind(addr)
+
+while True:
+    data,cli_addr = s.recvfrom(1024)
+    print(data.decode(),end="")
+    s.sendto(b"How are you?\r\n",cli_addr)
+s.close()
+-------------------------------------------------------------------------------------
+
+                                                                 创建UDP客户端 
+创建UDP客户端的步骤主要如下：
+1.创建客户端套接字：cs = socket.socket（）
+2.与服务器通信: cs.sendto(）/cs.recvfrom()
+3.关闭客户端套接字：cs.close() 
+----------------------------------------
+import socket
+host = ""
+port = 12345
+addr = (host,port)
+c = socket.socket(type=socket.SOCK_DGRAM)
+
+c.sendto(b"Nice to meet you!\r\n",addr)
+data,ser_addr = c.recvfrom(1024)
+print(data.decode())
+c.close()
+
+______________________________
+UDP客户端循环
+import socket
+
+host = "127.0.0.1"
+port = 12345
+addr = (host,port)
+c = socket.socket(type=socket.SOCK_DGRAM)
+
+while True:
+    sdata = input(">")+"\r\n"
+    if sdata.strip() == "quit":
+        break
+    c.sendto(b"Nice to meet you!\r\n",addr)
+    data,ser_addr = c.recvfrom(1024)
+    print(data.decode())
+c.close()
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+

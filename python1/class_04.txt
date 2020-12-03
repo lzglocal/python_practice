@@ -1,0 +1,135 @@
+while循环
+
+判断合法用户
+1.创建login2.py文件
+2.提示用户输入用户名和密码
+3.获取相关信息后，将其保存在变量中
+4.如果用户输的用户名为bob，密码为123456，则输出
+Login successful ，否则输出Login inorrect
+
+
+import getpass   #导入名为getpass 的模块
+username = input("username:")
+password = getpass.getpass("password:")
+
+if username == "bob" and password == "123456" :
+     print("Login successful")
+else:
+     print("Login inorrect")
+
+----------------------------------------------------------------------------------------------------------
+import random
+
+number = random.randint(1,100)   #生成1-100间的随机数字，包含1和100
+print("number ->",number)
+answer = int (input("猜数1-100:"))    #将用户输入的字符数字转成真正的int数字
+
+if answer > number:
+    print("猜大了")
+elif answer< number:
+    print("猜小了")
+else:
+    print("猜对了")
+
+----------------------------
+import random
+number = random.randint(1,100)
+while True:
+    answer = int(input("\033[34;1m猜数1-100：\033[0m"))
+    if answer > number :
+        print("\033[34;1m猜大了\033[0m")
+    elif answer <number:
+        print("\033[34;1m猜小了\033[0m")
+    else:
+        print("\033[31;1m猜对了[\033[0m")
+        break
+--------------------------------------------
+import random
+all_choise = ['石头', "箭头", "布"]
+win_list = [['石头', '剪刀'], ['布', '石头'], ['剪刀', '布']]
+
+prompt = """1.石头
+2.剪刀
+3.布
+请出拳（0/1/2):"""
+
+computer = random.choice(all_choise)
+index = int(input(prompt))
+player = all_choise[index]
+print("你的出拳:", player, "计算机出拳:", computer)
+if player == computer:
+    print("\033[32;1m平局\033[0m")
+elif [player, computer] in win_list:
+    print("\033[35;1m你赢了\033[0m")
+else:
+    print("\033[31;1m你输了\033[0m")
+--------------------------------------------------------------
+import random
+tries = 0   #设置计数器，用户最多猜3次
+number = random.randint(1,10)
+
+while tries<3:
+    answer = int(input("猜数（1-10）："))
+    if answer > number:
+        print("猜大了")
+    elif answer < number:
+        print("猜小了")
+    else:
+        print("猜对了")
+        break
+    tries +=1
+else:
+    print("数字是：",number)
+
+
+
+————————————————————————————————————---------------
+三元运算符，也叫条件表达式
+例如:
+      a = 100
+      b = 80 
+if a<b:
+           smaller = a
+else:
+           smaller =b
+以上 写法，可简写为
+smaller = a if a<b else b 
+
+----------------------------------------------------------------------------------
+score = int(input("请输入你的成绩："))
+
+if 70>score>=60:
+    print("及格")
+elif 80>score>=70:
+    print("良")
+elif 90>score>=80:
+    print("好")
+elif score>=90:
+    print("优秀")
+else:
+    print("你要努力了")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+

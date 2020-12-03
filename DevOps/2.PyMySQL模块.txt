@@ -1,0 +1,262 @@
+python没有把所有的模块都安装到系统中，非标准中的模块需要手工安装
+1.官方站点   http://pypi.python.org  搜索到相关的模块下载   
+
+tar -xzf   PyMySQL -xxx.tar.gz  
+cd PyMySQL  
+python setup.py install   
+
+2.使用pip安装，类型与yum 。单独安装模块 。模块也有依赖，就像RPM一样。
+pip3 install  pymysql 
+pip3 install PyMySQL -xxx.tar.gz 
+
+3. 再线安装，可以采用国内开源镜像站点  
+mkdir  ~/.pip/
+vim ~/.pip/pip.conf  
+[global]
+index-url = http://pypi.douban.com/simple/
+[install]
+trusted-host=pypi.douban.com 
+
+
+pip3 install pymysql 
+
+验证：
+ [root@Node-1 ~]# python3
+>>> import pymysql             //可以成功导入已经成功安装  
+
+ 
+准备数据库 
+yum -y install mariadb mariadb-server 
+systemctl start mariadb
+systemctl enable mariadb 
+mysqladmin password 123qqq...A   
+
+mysql -hlocalhost -uroot -p 
+create database pymysql default charset utf8;  
+
+
+--------------------------------------------------------------
+例： 
+数据库中需要记录的字段有：
+工号 姓名  性别  出生日期  联系方式  部门  工资日期   基本工资   奖金  实发工资  
+
+
+关系型数据库要注意消除冗余 
+1.第一范式：对域添加一个规范要求，所有的域都应该是原子性的、
+即数据库的每一列都是不可分割的原子数据项
+联系方式不具有原子性，所以要进一步拆分开：住址、email、电话 
+
+2.第二范式：在1NF 的基础上，非码属性必须完全依赖于码、
+在INF基础上消除非主属性对主码的部分函数依赖 
+employees   ： 工号 姓名 性别  住址、Email、电话、部门ID
+salary：            工号   工资日期   基本工资  奖金   实发工资 
+departments ：部门ID   部门名称 
+
+3.第三范式 （3NF）是第二范式（2NF）的一个子集，任何非主属性不得传递依赖于主属性
+实发工资依赖基本工资和奖金，这个字段不应该存在。用的时候临时计算。
+ employees   ： 工号 姓名 性别  住址、Email、电话、部门ID
+salary：            工号   工资日期   基本工资  奖金   
+departments ：部门ID   部门名称 
+
+------------------------------------------------------------------------------
+create database pymysql default charset utf8;
+grant all on *.* to test@"%" identified by "123qqq...A";  
+
+可以写代码远程创建连接   
+--------------------------------
+创建部门表
+
+import pymysql
+
+conn = pymysql.connect(
+    host = "192.168.22.131",
+    port = 3306,
+    user = "test",
+    passwd = "123qqq...A",
+    db = "pymysql",                 //连接到pymysql库  
+    charset = "utf8"
+)
+cursor = conn.cursor()
+create_dep = """create table departments(dep_id int,
+dep_name varchar(20) unique not null,primary key(dep_id))
+"""
+cursor.execute(create_dep)
+conn.commit()
+cursor.close()
+conn.close()
+
+---------------------------------------------------------------------------------
+创建员工表
+
+import pymysql
+
+conn = pymysql.connect(
+    host = "192.168.22.131",
+    port = 3306,
+    user = "test",
+    passwd = "123qqq...A",
+    db = "pymysql",
+    charset = "utf8"
+)
+cursor = conn.cursor()
+#create_dep = """create table departments(dep_id int,
+#dep_name varchar(20) unique not null,primary key(dep_id))
+#"""
+create_emp = """create table employees(emp_id int,emp_name varchar(20),
+gender varchar(6),email varchar(50),phone char(11),dep_id int,primary key(emp_id),
+foreign key(dep_id) references departments(dep_id))
+"""
+#cursor.execute(create_dep)
+cursor.execute(create_emp)
+conn.commit()
+cursor.close()
+conn.close()
+
+
+------------------------------------------------------------------------------------
+创建工资表 
+
+import pymysql
+
+conn = pymysql.connect(
+    host = "192.168.22.131",
+    port = 3306,
+    user = "test",
+    passwd = "123qqq...A",
+    db = "pymysql",
+    charset = "utf8"
+)
+cursor = conn.cursor()
+#create_dep = """create table departments(dep_id int,
+#dep_name varchar(20) unique not null,primary key(dep_id))
+#"""
+# create_emp = """create table employees(emp_id int,emp_name varchar(20),
+# gender varchar(6),email varchar(50),phone char(11),dep_id int,primary key(emp_id),
+# foreign key(dep_id) references departments(dep_id))
+# """
+create_sal = """CREATE TABLE salary(auto_id INT,date DATE,emp_id INT,basic INT,awards INT,
+PRIMARY KEY(auto_id),FOREIGN KEY(emp_id) REFERENCES employees(emp_id))
+"""
+# #cursor.execute(create_dep)
+# cursor.execute(create_emp)
+cursor.execute(create_sal)
+conn.commit()
+cursor.close()
+conn.close()
+
+-------------------------------------------------------------------------------------------------
+增删改查   
+
+
+插入表数据
+import pymysql
+conn = pymysql.connect(
+    host = "192.168.22.131",
+    port = 3306,
+    user = "test",
+    passwd = "123qqq...A",
+    db = "pymysql",
+    charset = "utf8"
+)
+cursor = conn.cursor()
+
+insert_dep1 = "INSERT INTO departments VALUES(%s , %s)"
+hr = (1,"HR")
+other_deps = [(2,"运维部"),(3,"开发部"),(4,"测试部"),(5,"UI"),(6,"客服部"),(7,"策划")]
+cursor.execute(insert_dep1,hr)
+cursor.executemany(insert_dep1,other_deps)
+
+conn.commit()
+cursor.close()
+conn.close()
+
+---------------------------------------------------------------------------------------------------
+插入员工数据 
+
+import pymysql
+
+conn = pymysql.connect(
+    host = "192.168.22.131",
+    port = 3306,
+    user = "test",
+    passwd = "123qqq...A",
+    db = "pymysql",
+    charset = "utf8"
+)
+cursor = conn.cursor()
+
+# insert_dep1 = "INSERT INTO departments VALUES(%s , %s)"
+# hr = (1,"HR")
+# other_deps = [(2,"运维部"),(3,"开发部"),(4,"测试部"),(5,"UI"),(6,"客服部"),(7,"策划")]
+# cursor.execute(insert_dep1,hr)
+# cursor.executemany(insert_dep1,other_deps)
+
+insert_emp ='INSERT INTO employees VALUES(%s,%s,%s,%s,%s,%s)'
+gw = (10,"Tom","male","tom@123.com","12999888943",3)
+jay = (11,"Jay","male","Jay@ladaza.com","9974745745",2)
+jeff = (13,"Jeff","male","tom@google.com","12999888943",3)
+lisa = (14,"Lisa","female","lisa@baidu.com","8888888888",6)
+bs = (15,"bs","male","bs@123.com","129998843",3)
+alon = (16,"alon","male","alon@123.com","129998843",2)
+Jill = (17,"Jill","male","jill@123.com","1288988893",2)
+charles= (18,"charles","male","charles@123.com","129888943",2)
+ws =(19,"王顺","male","ws@123.com","1299988943",3)
+jemp =(34,"emp","male","jemp@123.com","188288893",3)
+emp = [gw,jay,jeff,lisa,bs,alon,Jill,charles,ws,jemp]
+cursor.executemany(insert_emp,emp)
+maria = (1,"Maria","female","www.@baidu.com","99458984",1)
+cursor.execute(insert_emp,maria)
+conn.commit()
+cursor.close()
+conn.close()
+
+------------------------------------------------------------------------------------------
+查询语句
+
+import pymysql
+
+conn = pymysql.connect(
+    host = "192.168.22.131",
+    port = 3306,
+    user = "test",
+    passwd = "123qqq...A",
+    db = "pymysql",
+    charset = "utf8"
+)
+cursor = conn.cursor()
+
+#query1 ='SELECT * FROM departments ORDER BY dep_id;'
+query3 = """SELECT e.emp_name,d.dep_name FROM employees as e JOIN departments
+AS d ON e.dep_id = d.dep_id """
+#cursor.execute(query1)
+cursor.execute(query3)
+#cursor.scroll(2,mode="absolute")  #绝对移动是从头算这里从 2 开始
+#result = cursor.fetchone()
+#result2 = cursor.fetchmany(2)
+result3 = cursor.fetchall()
+#print(result)
+#print("-"*30)
+#cursor.scroll(-2)   #默认相对移动
+#print(result2)
+#print("-"*30)
+print(result3)
+
+cursor.close()
+conn.close()
+
+——————————————————————————————————————
+更新 
+
+update_hr = 'UPDATE departments set dep_name=%s where dep_name=%s'
+data = ("人事部","hr")
+
+cursor.execute(update_hr,data)
+
+
+------------------------------------------------------------------------------------------------
+删除  
+
+delete_dep = 'DELETE FROM departments where dep_name =%s'
+cursor.execute(delete_dep,("UI",))
+
+

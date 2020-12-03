@@ -1,0 +1,320 @@
+------------------------------
+7.校验状态
+
+//设置为错误状态
+<div class="form-group has-error">
+     样式                           说明
+has-error                   错误状态
+has-success               成功状态
+has-warning               警告状态
+
+//label标签同步相应状态
+<label class="control-label"> input with success</label>
+
+<form action="">
+        <div class="form-group has-success">
+            <label class="control-label">成功</label>
+            <input type="text" class="form-control">
+        </div>
+    </form>
+
+---------------------------
+8.添加额外的图标
+//文本框右侧内置文本图标
+打开boostrap中文网 ->选择boostrap3文档 ->组件->想要什么图标就
+复制下面文字 到span元素的class 里面
+<span class="glyphicon glyphicon-volume-up"></span>    //声音图标
+
+<div class="container">
+    <form action="">
+        <div class="from-group has-feedback">
+            <label>电子邮件</label>
+            <input type="email" class="form-control">
+            <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+        </div>
+    </form>
+</div>
+
+注意：除了glyphicon-ok外，还有如下表
+         样式                           说明
+glyphicon-ok                     成功状态
+glyphicon-warning-sign      警告状态
+glyphicon-remove              错误状态
+
+---------------------------
+9.控制尺寸
+//从大到小
+   <input type="text" class="form-control input-lg">
+    <input type="text" class="form-control ">                      //一般默认标准使用
+    <input type="text" class="form-control input-sm">
+
+
+——————————————————————————————————————————
+                                                    
+                                                      二.图片
+
+bootstrap提供了一些丰富的图片样式供开发者使用
+
+1.图片形状
+//三种形状
+    <img src="test.jpg" alt="" class="img-rounded">           //圆角图片
+    <img src="test.jpg" alt="" class="img-circle">              //圆图片
+    <img src="test.jpg" alt="" class="img-thumbnail">     //带有边框的图片
+
+//响应式图片
+    <img src="test.jpg" alt="" class="img-responsive">    //没有变化
+
+
+——————————————————————————————————————————
+
+                                                       三.布局容器
+bootstrap需要为页面内容和栅格系统包裹一个，container容器。由于padding等
+属性的原因，这两种容器类不能相互嵌套
+
+栅格系统
+1.必须有一个container或container-fluid的class  
+2.container 中一行的设置名为row
+3.row中可以最多容纳12列
+4.如果不是12列，可以把几列进行合并
+
+------------------
+//固定宽度
+<div class="container">
+...
+</div>
+
+-------------------
+//100%宽度
+<div class="container-fluid">
+...
+</div>
+
+-------------------------------------------
+      //col-sm-4 col-sm-3 col-sm-8    表示4 3 8 个格子合并
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 bg-danger"><p>单元格</p><p>单元格</p><p>单元格</p></div>   
+        <div class="col-sm-4 bg-success"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+        <div class="col-sm-4 bg-primary"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 bg-info"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+        <div class="col-sm-3 bg-warning"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+        <div class="col-sm-3 bg-primary"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+        <div class="col-sm-3 bg-info"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 bg-danger"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+        <div class="col-sm-8 bg-success"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+    </div>
+</div>
+
+
+//适合所有屏幕 ，四屏 
+    <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 a"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 a"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 a"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 a"><p>单元格</p><p>单元格</p><p>单元格</p></div>
+    </div>
+
+
+————————————————————————————————————————————————
+
+//各种色调的背景
+<div class="container">
+    <p>linux学院</p>
+    <p class="text-muted text-center">Linux计算机学院</p>
+    <p class="text-danger bg-success">Linux计算机学院</p>           //可和其他元素一起混合
+    <p class="text-warning">Linux计算机学院</p>
+    <p class="text-primary">Linux计算机学院</p>
+    <p class="text-info">Linux计算机学院</p>
+    <p class="text-success bg-danger">Linux计算机学院</p>
+</div>
+
+    样式                                    描述
+bg-primary                           主要蓝
+bg-success                           成功绿
+bg-info                                 信息蓝
+bg-warning                          警告黄  
+
+---------------------
+3.关闭按钮
+<button type="button" class="close">&times;</button>
+
+---------------------
+4.三角符号
+<span class="caret"></span>
+
+---------------------
+5.快速浮动
+<div class="pull-left"></div>
+<div class="pull-right"></div>
+注:这个浮动其实就是 float，只不过使用了 !important加强了优先级。
+
+-----------------------
+6.块级居中
+<div class="center-block">居中</div>
+注:就是margin:x auto; 并且设置了display:block；
+
+-----------------------
+7.清理浮动
+<div class="clearfix"></div>
+注: 这个div可以放在需要清理浮动区块的前面即可
+
+
+------------------------
+8.显示和隐藏
+<div class="show">show</div>
+<div class="hidden">hidden</div>
+
+__________________________________________________________________________________________________
+
+
+二.下拉菜单组件
+下拉菜单，就是点击一个元素或按钮，触发隐藏的列表显示出来。
+//基本格式
+     <div class="dropdown">
+         <button class="btn btn-defualt" data-toggle="dropdown">
+             云计算
+             <span class="caret"></span>
+         </button>
+         <ul class="dropdown-menu">
+             <li href="#linux">Linux</li>
+             <li href="#DB>DB</li>
+             <li href="#python>python</li>
+         </ul>
+     </div>
+按钮和菜单需要包裹在.dropdown的容器里，而作为被点击的元素按钮需要设置
+data-toggle="dropdown" 才能有效。对于菜单部分，设置class="dropdown-menu"才能
+自动隐藏并添加固定样式，设置class="caret" 表示箭头，可上可下
+
+----------------------
+//设置向上触发
+<div class="dropup">
+
+-----------------------------------------------------
+//菜单项居右对齐，默认值是dropdown-menu-left
+<ul class="dropdown-menu dorpdown-menu-right">
+
+-----------------------------------
+//设置菜单的标题，不要加超链接
+<li class="dropdown-header">网站导航</li>
+
+---------------------------
+//设置菜单的分割线
+<li class="divider"></li>
+
+------------------------------
+//设置菜单的禁用项
+<li class="disabled"><a href="#">产品</a></li>
+
+________________________________________________________________________________________________________
+                  
+                                                          输入框
+文本输入框就是可以在<input>元素前后加上文字或按钮，可以实现对表单控件的
+
+------------------
+//在左侧添加文字
+    <div class="input-group">
+        <span class="input-group-addon">@</span>
+        <input type="text" class="form-control">
+    </div>
+
+----------------------
+//在右侧添加文字
+    <div class="input-group">
+        <input type="text" class="form-control">
+        <span class="input-group-addon">@</span>
+    </div>
+
+------------------
+//在两侧添加文字
+    <div class="input-group">
+        <span class="input-group-addon">$</span>
+        <input type="text" class="form-control">
+        <span class="input-group-addon">.00</span>
+    </div>
+
+---------------------
+//设置尺寸，另外三种分别是默认.xs、sm
+<div class="input-group input-group-lg">     
+
+-----------------------
+//左侧使用复选框和单选框
+    <div class="input-group">
+        <span class="input-group-addon"><input type="checkbox"></span>
+        <input type="text" class="form-control">
+    </div>
+
+
+__________________________________________________________________________________________________________
+
+                                                          导航组件
+Bootstrap提供了一组导航组件，用于实现Web页面的栏目操作。
+----------------------
+//基本导航标签页
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">Linux</a></li>
+        <li><a href="">DB</a></li>
+        <li><a href="">Python</a></li>
+    </ul>
+</div>
+
+---------------------
+//胶囊式导航
+<ul class="nav nav-pills">
+
+-------------------
+//垂直胶囊式导航
+<ul class="nav nav-pills nav-stacked">
+
+--------------------
+//导航两端对齐
+<ul class="nav nav-tabs nav-justified">
+
+-----------------------
+//禁用导航中的项目
+<li class="disabled"><a href="#">关于</a></li>
+
+----------------------
+//带下拉菜单的导航
+    <ul class="nav nav-tabs">
+        <li class="dropdown">
+            <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                大数据 <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="">Linux</a></li>
+                <li><a href="">db</a></li>
+                <li><a href="">python</a></li>
+            </ul>
+        </li>
+        <li><a href="">云计算</a></li>
+        <li><a href="">网络运维</a></li>
+    </ul>
+
+--------------------------
+//导航中使用按钮
+<button class="btn btn-default navbar-btn">按钮</button>
+
+-------------------------
+//导航中使用对齐方式，left和right
+<button class="btn btn-default navbar-btn navbar-right">按钮</button>
+
+_____________________________________________________________________________________________________
+
+                                                       标签页
+
+标签页也就是通常所说的选项卡功能
+//基本用法
+                    
+
+
+
+————————————————————————————————————————————————
+
+
+                                哔哩哔哩网站      bilibili.com
+ 搜索 李炎辉Bootstrap   可以得到bootstrap的21张文档

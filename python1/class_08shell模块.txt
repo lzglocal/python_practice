@@ -1,0 +1,158 @@
+                     shell 相关模块
+import shutil 
+---------------------------------------------------
+f1 = open("/etc/hosts")
+f2 = open("/tmp/zj.txt")
+shutil.copyfileobj(f1,f2)               #copy 文件对象  
+f1.close
+f2.close
+-----------------------------------------------------------
+shutil.copyfile("/etc/hosts","/tmp/abcd.txt")        #copy文件名
+
+------------------------------------------------------------------
+shutil.copy("/etc/hosts","/tmp/aaa.txt")      #目标可能是目录
+shutil.copy("/etc/passwd","/tmp/")  
+
+------------------------------------------------------------------
+shutil.copy2("/etc/passwd","/tmp/")               #相当于cp -p 拷贝权限 
+
+-----------------------------------------------------------------
+shutil.copytree("/etc/security","/tmp/anquan")      #  cp -r 
+-------------------------------------------------------------------
+shutil.move("/tmp/zj.txt","/var/tmp/")               #相当于mv
+-----------------------------------------------------------------
+shutil.rmtree("/tmp/anquan")              #相当于rm -rf ，但只能删除目录不能删除单独文件
+shutil.rmtree("/var/tmp/zj.txt")            # 不能删除单个文件
+import os
+os.remove("/var/tmp/zj.txt")                   #这个可以删除单个文件
+-----------------------------------------------------------------------------
+shutil.chown("/tmp/passwd",user="bob",group="bob")      #相当于chown
+
+使用help可以查看更多
+例： help(shutil.rmtree) 
+
+__________________________________________________________________________________________________________
+    变量赋值
+Python支持链式多重赋值
+x = y = 10 
+id(x)  
+9348224    #显示变量在内存的地址
+id(y)
+9348224
+x = 20     #修改x = 20  x变了，y不变  
+y = 10        #y的值不变，数值是不可变的
+
+a = b = [10,20] 
+a[0] = 100
+a 
+[100,20]
+b
+[100,20]           #列表是可变的
+-------------------------------------------
+
+多元赋值
+a,b = 10,20      #相当于 a = 10；b = 20 
+a,b = b,a        #a和b的值互换   
+
+——————————————————————————————————————————
+合法标识符
+1.第一个字符必须是字母或下划线_
+2.剩下的字符可以是字母和数字或下划线
+3.大小写敏感区分
+
+——————————————————————————————————————————
+关键字
+['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await', 'break', 'class', 'continue',
+ 'def', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is',
+'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
+
+查看有哪些关键字
+import keyword 
+print(keyword.kwlist)
+keyword.iskeyword("len")   #判断len是否是关键字  或 "len"   in  keyword.kwlist 等等  
+
+——------------------------------------------------------------------------------------------
+内键
+http://yiyibooks.cn/    -> python352文档 - > 库参考
+
+---------------------------------------------------------------------------------------------
+编写程序时，应该建立一种统一且容易阅读的结构，并将它应用到每一个文件中去
+#!/usr/bin/env python                      #起始行
+"this is a test module"                     #模块文档字符串
+import sys                          #导入模块
+import os
+
+debug = Ture                    #全局变量声明
+
+class FooClass(object):         #类定义
+      "Foo class"
+     pass 
+
+def test():                           #函数定义
+       "test function"
+      foo = FooClass()
+
+if_name_ == '_main_':          #程序主体
+       test()  
+
+#############################################################################
+
+
+编写程序的流程、步骤：
+1.发呆、思考：在脑海里像过电影一样，想想程序是怎么进行的（交互的？非交互的？）
+交互的：考虑屏幕上提示什么，用户回答什么
+2.思考程序有哪些功能。将这些功能创建函数，编写程序框架
+
+import os
+
+def get_fname():
+    while True:
+        fname = input("filename:")          
+        if not os.path.exists(fname):         #判断文件是否存在  
+            break
+        print("文件已存在，请重试")
+
+    return fname
+
+def get_content():
+    content = []
+    while True:
+        line = input('("end" to quit)>')
+        if line == "end":
+            break
+        content.append(line)
+
+    return content
+
+def wfile(fname,content):
+    with open(fname,"w") as fobj:
+        fobj.writelines(content)
+
+if __name__ == '__main__':
+    fname = get_fname()
+    content = get_content()
+    content = [line +"\n" for line in content]   #为每行加上回车
+    wfile(fname,content)
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

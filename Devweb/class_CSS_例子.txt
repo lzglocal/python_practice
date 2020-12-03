@@ -1,0 +1,300 @@
+--------------------------------------------------------------------
+                             
+                               垂直导航栏
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>nav</title>
+<!--    <link rel="stylesheet" href="nav.css">-->
+    <style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+/* 鼠标移动到选项上修改背景颜色 */
+li a:hover {
+    background-color: #555;
+    color: white;
+}
+
+.active {
+    background-color: #4CAF50;
+    color: white;
+}
+    </style>
+</head>
+<body>
+
+<ul>
+  <li><a class="active" href="#home">主页</a></li>
+  <li><a href="#news">新闻</a></li>
+  <li><a href="#contact">联系</a></li>
+  <li><a href="#about">关于</a></li>
+</ul>
+</body>
+</html>                          
+
+--------------------------------------------------------------------
+
+                               水平导航栏
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>nav</title>
+<!--    <link rel="stylesheet" href="nav.css">-->
+    <style>
+        ul{
+  list-style-type:none;
+  margin:0;
+  padding:6px 0;
+}
+li{
+          display:inline;
+}
+
+a:link ,a:visited{
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #98bf21;
+    text-align:center;
+    padding:6px;
+    text-decoration:none;
+
+}
+a:hover{
+      background-color:#7A991A;
+}
+    </style>
+</head>
+<body>
+
+<ul>
+  <li><a class="active" href="#home">主页</a></li>
+  <li><a href="#news">新闻</a></li>
+  <li><a href="#contact">联系</a></li>
+  <li><a href="#about">关于</a></li>
+</ul>
+</body>
+</html>
+
+
+---------------------------------------------------------------------------
+                                              nav 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>nav</title>
+<!--    <link rel="stylesheet" href="nav.css">-->
+    <style>
+        ul{
+  list-style-type:none;
+  margin:0;
+  padding:6px 0;
+}
+li{
+          display:inline;
+}
+
+a:link ,a:visited{
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #98bf21;
+    text-align:center;
+    padding:6px;
+    text-decoration:none;
+
+}
+a:hover{
+      background-color:#7A991A;
+}
+    </style>
+</head>
+<body>
+
+<ul>
+  <li><a class="active" href="#home">主页</a></li>
+  <li><a href="#news">新闻</a></li>
+  <li><a href="#contact">联系</a></li>
+  <li><a href="#about">关于</a></li>
+</ul>
+</body>
+</html>
+
+
+--------------------------------------------------------
+                              一列居中
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>一列居中</title>
+<!--    <link rel="stylesheet" href="onecol.css">-->
+    <style>
+.container{
+       width:auto;
+       margin:0 auto;
+}
+
+.banner{
+    height:100px;
+    background:lightgray;
+
+}
+.content{
+    height:500px;
+    background:lightblue;
+}
+.footer{
+    height:100px;
+    background:lightgray;
+    text-align:center;
+    line-height:100px;
+}
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="banner">banner</div>
+    <div class="content">这个正文</div>
+    <div class="footer">
+        <form action="https://google.com/search" target="_blank">
+            <label> <input type="text" name="q"></label>
+            <input type="submit" value="谷歌搜索">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+-------------------------------------------------
+                              两列居中 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>两列居中</title>
+<!--    <link rel="stylesheet" href="twocol.css">-->
+    <style>
+        .container{
+     height:100px;
+     background:lightgray;
+}
+.banner{
+     height:100px;
+     background:lightgray
+}
+.left{
+     width:200px;
+     height:300px;
+     background:darkgreen;
+     float:left;
+}
+.right{
+     height:300px;
+     margin-left:200px;
+     background:darkorange;
+}
+.footer{
+     height:100px;
+     background:lightgray;
+}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="banner">banner</div>
+    <div class="content">
+        <div class="left">左</div>
+        <div class="right">右</div>
+    </div>
+    <div class="footer">footer</div>
+</div>
+</body>
+</html>
+
+----------------------------------------------------------------------
+
+                             三列居中
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>三列居中</title>
+<!--    <link rel="stylesheet" href="threecol.css">-->
+    <style>
+        p{
+    margin: 0;
+    padding: 0;
+}
+.container{
+      width:1000px;
+      margin 0;
+}
+.banner,.footer{
+      height:100px;
+      background:lightgray;
+}
+.left{
+     width:200px;
+     float:left;
+     background:lightblue;
+}
+.middle{
+      width:600px;
+   /*   height:200px; */
+      margin-left:200px;
+      background:darkcyan;
+}
+.right{
+      width:200px;
+     /* height:200px;*/
+      float:right;
+      background:antiquewhite;
+}
+.clean{
+       clear:both;   /*清理浮动*/
+}
+    </style>
+</head>
+<body>
+<div class="container">
+    
+    <div class="banner">banner</div>
+    
+    <div class="content">
+        <div class="left">left</div>
+        <div class="right">right</div>
+        <div class="middle">middle</div>
+    </div>
+
+    <div class="clean"></div>       <!--*设置清除浮动-->
+    <div class="footer">footer</div>
+    
+</div>
+</body>
+</html>
+
+

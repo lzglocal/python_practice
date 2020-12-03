@@ -1,0 +1,75 @@
+df -h
+lsblk  
+blkid
+pvs、pvdisplay 
+vgs、vgdisplay 
+lvs、 lvdisplay 
+umount      卸载挂载    
+pvremove    卸载物理卷
+vgremove    卸载卷组                    vgremove  centos
+lvremove    卸载逻辑卷      格式： lvremove  /dev/centos/home  
+mount -a 
+/etc/fstab    
+partprobe  
+
+                                          创建分区
+-------------------------------------------
+fdisk /dev/sdb 
+p  查询
+n 创建新磁盘
+t 更改现有磁盘的文件格式  如：t 之后 8e   把磁盘类型改变LVM 格式  
+d 删除分区 
+
+输入n
+一路回车   看到成功后再更改磁盘类型为LVM 格式  
+输入 t  
+输入 8e
+        w    //保存退出  
+
+                                 
+                                       创建物理卷
+-----------------------------------------
+# blkid                       //可以看到刚刚创建的文件类型为  TYPE="LVM2_member       
+
+# pvcreate   /dev/sdb1                   //创建物理卷  
+# pvs                                           //查看物理卷
+# vgs                                         //查看卷组 
+
+
+
+                                       扩展卷组
+-----------------------------------------
+vgs查看 为原有的系统卷组扩容  
+# vgextend  centos  /dev/sdb1                         // 卷组并不是linux都一样   
+
+#也可以新建卷组
+vgcreate    vgtest    /dev/sdb1         //vgtest是卷组名    
+
+
+
+                                      扩展逻辑卷
+-----------------------------------------
+# lvextend -L +300G /dev/centos/home                //为/home扩容指定增加 300G 
+lvextend -L +100%FREE   /dev/conetos/home        //是所有的空闲空间都扩容到逻辑卷中  
+#也可以新建逻辑卷
+lvcreate  -L 100G vgtest -n lvtest                     //lvtest 逻辑卷名
+lvcreate  -L +100%FREE  vgtest  -n lvtest        //所有卷组空间全部分配到lvtest逻辑卷
+
+
+
+                                      不影响原有文件内容格式化并刷新 
+-----------------------------------------
+xfs_growfs    /dev/centos/home                  //刷新文件系统 
+
+
+
+df -h    //查看挂载和使用情况  
+
+resize2fs :刷新ext4文件系统 centos 6 
+xfs_growfs :刷新xfs文件系统 censtos 7 8 
+
+
+
+-------------------------------------------------------------------------------------------------------------------
+
+

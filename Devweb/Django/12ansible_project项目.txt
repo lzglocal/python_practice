@@ -1,0 +1,92 @@
+ansible   项目  
+--------------------------
+一· 项目目标  
+1.通过web界面显示所有服务器信息 
+2. 通过web界面 添加主机 /组
+3. 通过 web 界面添加 模块及参数  
+4. 通过 web界面 在指定 的主机/组执行 选定的任务  
+
+------------------------------
+二 、准备环境  
+1.在虚拟环境中安装ansible
+
+python3 -m venv ansible_project   
+
+source /opt/ansible_project/bin/activate  激活  
+
+
+pip install sqlalchemy  
+
+2.准备3台虚拟机作为测试机，node1-3 
+
+----------------------------------
+三.项目规划  
+1. 数据库规划  
+（1）主机组：组名
+（2）主机：主机名、ip地址、组
+（3）模块：模块名
+（4）参数：参数的key-val对，模块 
+
+2.URL
+（1）主页http://127.0.0.1:8000   用于列出所有的任务 [主机信息、添加主机或组、 添加模块、执行任务 ]
+（2）http://127.0.0.1:8000/webansi/   用于显示所有主机的信息
+（3）http://127.0.0.1:8000/webansi/addhosts   添加主机/组
+（4）http://127.0.0.1:8000/webansi/addmodules   用于添加模块或参数 
+（5）http://127.0.0.1:8000/webansi/tasks                  用于执行任务  
+
+-------------------------------------
+四  、创建项目myansible ，创建应用webansi  
+
+(ans_pro) [root@django home]# django-admin startproject myansible     创建项目 
+(ans_pro) [root@django myansible]# python manage.py startapp webansi     创建应用
+
+2.修改pycharm 配置中的django 设置   使用默认的
+3.修改配置 setting.py   
+vim  myansible/setting.py 
+
+ALLOWED_HOSTS = '*'
+INSTALLED_APPS = [
+        ......  
+    'webansi'
+]
+LANGUAGE_CODE = 'zh-hans'
+TIME_ZONE = 'Asia/Shanghai'
+USE_TZ = False
+
+-----------------------------------
+五、编写模型
+1.创建模型  
+vim  webansi/models.py 
+
+from django.db import models
+# Create your models here.
+ 
+class HostGroup(models.Model):
+    groupname = models.CharField(max_length=50,unique=True,null=False)
+
+    def __str__(self):
+        return self.groupname
+
+class Host(models.Model):
+    hostname = models.CharField(max_length=100,unique=True,null=False)
+    ipaddr = models.CharField(max_length=15,null=False)
+    group = models.ForeignKey(HostGroup,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '%s => %s' % (self.hostname,self.group)
+
+class Module(models.Model):
+    module_name = models.CharField(max_length=50,unique=True,null=False)
+
+    def __str__(self):
+        return self.module_name
+
+class Argument(models.Model):
+    argrument_text = models.CharField(max_length=100,unique=True,null=False)
+    module = models.ForeignKey(Module,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '%s => %s' % (self.module,self.argrument_text)
+
+2.生成数据库表  
+

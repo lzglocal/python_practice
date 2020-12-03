@@ -1,0 +1,293 @@
+ ------------------------------------------------------------------------
+
+                                            bootstrap 
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
+integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+//这个是连接了官网bootstrap的.CSS
+
+Bootstrap 提供了一些常规设计好的页面排版样式供开发者使用
+1.页面主体  
+              ： 将全局font-size 设置为 14px，line-height 行高设置为 1.428( 即20px )  
+                  <p> 段落元素被设置等于 1/2 行高（即 10px ）颜色被设置为 #333  深灰 
+
+例如 ： <p class="lead">Bootstrap 框架</p>
+
+ 如：  <p class="h2">这是2号标题大小</p>         //采用bootstrap class采用h2 字体为h2标题大小 
+         
+
+------------------------------------------------------------------
+ //内联元素使用标题字体
+<span class="h1">Bootstrap</span>
+
+//添加标记，<mark>元素或.mark类
+<p>Bootstrap<mark>框架</mark></p>
+
+//各种加线条的文本  
+ <del>删除的文本</del>                          //删除的文本
+    <s>无用的文本</s>                        //无用的文本
+    <ins>插入的文本</ins>                   插入的文本
+    <u>效果同上，下划线文本</u>     效果同上，下划线文本
+
+//各种强调的文本
+    <small>标准字号的85%</small>
+    <strong>加粗700</strong>           //加粗700<
+    <em>倾斜</em>           //倾斜
+
+//特殊键盘图标
+ 按&nbsp;<kbd>ctrl + c</kbd>                 //输入键盘图标
+-------------------------------------------------------------------
+
+4.对齐 
+//设置文本对齐
+    <p class="text-left">Bootstrap 框架</p>           //居左
+    <p class="text-center">Bootstrap 框架</p>           //居中
+    <p class="text-right">Bootstrap 框架</p>                //居右
+    <p class="text-justify">Bootstrap 框架</p>           //两端对齐，支持度不佳
+    <p class="text-nowrap">Bootstrap 框架</p>       //不换行
+---------------------------------------------------------------
+
+5.大小写 
+//设置英文文本大小写
+    <p class="text-lowercase">Bootstrap 框架</p>         //小写
+    <p class="text-uppercase">Bootstrap 框架</p>       //大写
+    <p class="text-capitalize">Bootstrap 框架</p>       //首字母大写
+
+-----------------------------------------------------------------------
+
+6.缩略语
+//缩略语
+Bootstrap <abbr title="Bootstrap" class="initialism">框架</abbr>
+
+<div class="container">             居中 
+
+----------------------------------------------------------------------------
+
+9.列表排版
+//移出默认样式
+   <ul class="list-unstyled">
+        <li>bootstrap</li>
+        <li>bootsrap</li>
+    </ul>
+
+//设置成内联
+   <ul class="list-inline">
+        <li>bootstrap</li>
+        <li>bootsrap</li>
+    </ul>
+
+//水平排列描述列表
+<dl class="dl-horizontal">
+        <dt>bootstrap</dt>
+        <dd>bootstrap提供了一些常规设置的好页面</dd>
+    </dl>
+
+---------------------------------------------------------------------------
+
+10.代码
+//内联代码
+<code>&lt;section&gt;</code>
+
+//用户输入
+press <kbd>crtl + ,</kbd>           //显示键盘  
+
+//代码块
+<pre>&lt;p&gt;Please input...&lt;p&gt;</pre>            //完全显示在屏幕
+
+
+——————————————————————————————————————
+                                                  表格 
+
+<table class="table table-bordered table-striped table-hover">   //1234都加了 
+-------------
+1.基本样式
+//实现基本的表格样式
+<table class="table">                   //我们可以通过Firebug查看相应的css
+
+---------------
+2.带边框的表格
+//给表格增加边框
+<table class="table table-bordered">
+
+------------------
+3.条纹状表格
+//让<tbody>里的行产生一行隔一行加单色背景效果
+<table class="table table-striped">
+
+--------------
+4.悬停鼠标
+//让<tbody>下的表格悬停鼠标实现背景效果
+<table class="table table-hover">
+
+------------------
+5.状态类
+//可以单独设置每一行的背景样式
+<tr class="success">
+一共有五种不同的样式可供选择
+   样式                 说明
+active                 鼠标悬停在行或单元格上
+success               标识成功或积极的动作
+info                     标识普通的提示信息或动作
+warning              标识警告或需要用户注意
+danger                表示危险或者潜在的带来负面影响的动作
+
+---------------------
+6.隐藏某一行
+//隐藏行
+<tr  class="sr-only">
+
+--------------------
+7.响应式表格
+//表格父元素设置响应式 ，小于768px出现边框
+
+————————————————————————————————————————
+
+                                                             按钮 
+
+1.可作为按钮使用的标签或元素
+//转化成普通按钮
+<a href="###" class="btn btn-default">Link</a>
+<button class="btn btn-default">Button</button> 
+<input type="button" class="btn btn-default" value="input">
+注意事项三点：
+   （1）针对组件的注意事项：
+虽然按钮类可以应用到<a>和<button>元素上，但是，导航和导航条组件只支持<button>
+   （2）链接被作为按钮使用时的注意事项
+如果<a>元素被作为按钮使用 -- 并用于在当前页面触发某些功能--而不是用于链接其他页面或链接当前页面中的其他部分，
+那么，务必为其设置 role="button"属性
+     (3)跨浏览器展现
+我们总结的最佳实践是：强烈建议尽可能使用<button>元素来获得在各个浏览器上获得相匹配的绘制效果
+
+---------------
+2.预定义样式
+//一般信息
+<button class="btn btn-info">Button</button>  
+
+       样式                                      说明
+btn-default                           默认样式
+btn-success                          成功样式
+<p><input type="submit" class="btn" value="按钮"></p>
+<p><input type="submit" class="btn btn-default"   value="按钮"></p>
+<p><input type="submit" class="btn btn-primary"  value="按钮"></p>
+<p><input type="submit" class="btn btn-danger"  value="按钮"></p>
+<p><input type="submit" class="btn btn-warning" value="按钮"></p>
+<p><input type="submit" class="btn btn-info"       value="按钮"></p>
+<p><input type="submit" class="btn btn-success" value="按钮"></p>
+<p><input type="submit" class="btn btn-block btn-primary" value="按钮"></p>
+
+—————————————————————————————————————————
+                                                    
+                                                      表单
+1.基本格式
+//实现基本的表单形式
+                                                                
+    <form action="">
+        <div class="form-group">
+            <label>电子邮件</label>
+            <input type="email" class="form-control" placeholder="请输入电子邮件">
+            </div>
+        <div class="form-group">
+            <label>密码</label>
+            <input type="password" class="form-control" placeholder="请输入密码">
+        </div>
+    </form>
+---------------
+    <form action="" class="form-inline">
+        <div class="form-group">
+            <label>用户名:</label><input type="text" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>密&nbsp;&nbsp;&nbsp;&nbsp;码:</label><input type="password" class="form-control">
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary">
+        </div>
+    </form>
+
+-----------------
+2.内联表单
+//让表单左对齐浮动，并表现为inline-block内联块结构
+<form class="form-inline">
+注：小于768px，会恢复独占样式
+
+-----------------
+3.表单合组
+//前后增加片段
+    <form action="">
+        <div class="input-group">
+            <div class="input-group-addon">￥</div>
+            <input type="text" class="form-control">
+            <div class="input-group-addon">.00</div>
+        </div>
+    </form>
+
+------------------
+4.水平排列
+//让表单内的元素保持水平排列
+    <form action="">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">电子邮件</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" placeholder="请输入您的电子邮件">
+            </div>
+        </div>
+    </form>
+
+-------------------
+5.复选框和单选框
+//设置复选框，在一行
+  <div class="checkbox">
+        <label>
+            <input type="checkbox">体育
+        </label>
+    </div>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox">音乐
+        </label>
+    </div>
+
+//设置禁用的复选框
+    <div class="checkbox" disabled>
+        <label>
+            <input type="checkbox" disabled>Linux
+        </label>
+    </div>
+
+//设置内联一行显示复选框
+    <form action="">
+        <div class="checkbox-inline disabled" >
+            <label>
+                <input type="checkbox" disabled>体育
+            </label>
+        </div>
+        <div class="checkbox-inline">
+            <label>
+            <input type="checkbox">音乐
+            </label>
+        </div>
+    </form>
+
+//设置单选框
+<div class="radio disabled">
+      <label>
+               <input type="radio" name="sex" disabled>男
+      </label>
+</div>
+
+-------------------
+6.下拉列表
+//设置下拉列表
+   <select name="" id="" class="form-control">
+        <option value="">1</option>
+        <option value="">2</option>
+        <option value="">3</option>
+        <option value="">4</option>
+    </select>
+
+
+
+
+
+
+

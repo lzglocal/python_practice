@@ -1,0 +1,214 @@
+新建django 项目  
+-----------------------
+1.创建项目
+在原有的环境下
+cd /home 
+django-admin startproject myblog 
+
+--------------------------
+2.新建应用 
+cd myblog  
+python manage.py  startapp blog  
+
+---------------------------
+ 3.修改配置 
+# myblog/setting.py 
+vim  myblog/setting.py 
+
+ALLOWED_HOSTS = '*' 
+INSTALLED_APPS = [
+   ......
+    'blog',
+]
+LANGUAGE_CODE = 'zh-hans'
+TIME_ZONE = 'Asia/Shanghai'
+USE_TZ = False
+
+---------------------------
+4.启动服务进行测试 
+python  manage.py runserver 0:8000 
+
+
+---------------------------------
+5.授权  ，以blog 开头的URL授权给应用  
+vim  myblog/urls.py 
+
+from django.contrib import admin
+from django.urls import path,include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('blog/',include('blog.urls')),
+
+6.在应用中创建URLConfig 文件  
+vim blog/urls.py  
+
+from django.conf.urls  import url
+  
+urlpatterns = [
+
+        ]
+
+7.以blog/hello 对应hello函数   
+vim blog/urls.py  
+
+from django.conf.urls  import url
+from . import views
+
+urlpatterns = [
+        url(r'^hello/$',views.hello,name="hello"),
+        ]
+
+vim blog/views.py 
+from django.shortcuts import render,HttpResponse
+  
+# Create your views here.
+def hello(request):
+    return HttpResponse('<h1>Hello World!</h1>')
+
+再修改 
+vim blog/urls.py
+   url(r'^welcome/(?P<name>\w+)/$',views.welcome,name="welcome"),
+
+vim blog/views.py
+def welcome(request,name):
+    return HttpResponse('<h1>hi %s </h1>'% name)
+
+
+----------------------------------
+8.创建模型 
+vim blog/models.py 
+
+from django.db import models  
+# Create your models here.
+class Blog(models.Model):
+    title = models.CharField(max_length=100)
+    pub_date = models.DateTimeField()
+    text = models.TextField()
+
+    def __str__(self):
+        return self.title
+
+(test) [root@django myblog]# python manage.py makemigrations
+(test) [root@django myblog]# python manage.py migrate
+
+--------------------------------
+9.创建管理员用户  
+(test) [root@django myblog]# python manage.py createsuperuser
+
+----------------------------
+10.把模型注册到后台管理界面  
+vim blog/admin.py 
+
+from django.contrib import admin
+from .models import Blog
+admin.site.register(Blog)
+
+[root@django myblog]# python manage.py runserver 0:8000  
+
+-----------------------------
+11.实现blog  
+（1）修改urls.py
+vim blog/urls.py 
+
+ url(r'^$',views.index,name="index"),        
+
+（2）修改 views.py
+def index(request):
+    return render (request,"index.html")
+
+（3）创建templates/index.html 
+mkdir blog/templates 
+vim blog/templates/index.html 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>我的博客</title>
+</head>
+<body>
+我的博客
+</body>
+</html>
+
+-----------------------------------------
+12.修改视图函数，将文章取出发送到HTML模板   
+vim blog/views.py  
+
+def index(request):
+    articles = Blog.objects.order_by('-pub_date')
+    return render (request,"index.html",{"articles":articles})
+
+--------------------------------
+13.修改 我的博客首页  index.html
+
+vim blog/templates/index.html  
+
+<!DOCTYPE html>
+<html lang="en">
+<head>  
+    <meta charset="UTF-8">
+    <title>我的博客</title>
+</head>
+<body>
+{% for article in articles %}
+    <H2>{{ article.title }}</h2>
+    <div>{{ article.pub_date }}</div>
+    <div>{{ article.text }}</div>
+{% empty %}
+    <h2>没有文章</h2>
+{% endfor %}
+</body>
+</html>
+
+------------------------------------
+14.发布文章时，时间不应该由用户手工书写 ，应该时程序自动添加，修改models.py 
+vim  blog/models.py  
+pub_date = models.DateTimeField(auto_now_add=True)
+
+python manage.py makemigrations
+python manage.py migrate 
+
+--------------------------------------
+15.在index.html 中加入表单，实现发布文章的功能  
+
+
+<form action="" method="post">
+	<label>标题:</label><input type="text" name="title"><br>
+	<textarea name="content"  cols="80" rows="10"></textarea><br>
+	<input type="submit" value="发布">
+</form>
+
+-----------------------------
+16.当表单提交数据时，会出现403CSARF失败，解决方法是在表单中加入验证。
+vim blog/templates/index.html 
+
+<form action="" method="post">
+    {% csrf_token %}
+    <label>标题:</label><input type="text" name="title"><br>
+    <textarea name="content"  cols="80" rows="10"></textarea><br>
+    <input type="submit" value="发布">
+</form>
+
+-----------------------------------
+17.接收网页POST 过来的数据    
+vim blog/views.py 
+
+# Create your views here.
+def index(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        Blog.objects.get_or_create(title=title,text=content)
+    articles = Blog.objects.order_by('-pub_date')
+    return render (request,"index.html",{"articles":articles})
+
+18博客正文没有分段，修正该问题，可以在模板文件中使用过滤功能
+将以下行  
+<div>{{ article.text }}</div>
+修改为：
+<div>{{ article.text | linebreaks }}</div>
+
+
+
+https://conyli.cc/django-2-by-example

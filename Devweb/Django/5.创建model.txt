@@ -1,0 +1,77 @@
+------------------------------
+8.创建模型Model
+--------------
+1.创建模型
+vim  polls/models.py
+
+from django.db import models
+  
+# Create your models here.
+class   Question(models.Model):
+    question_text = models.CharField(max_length=100)
+    pub_date = models.DateTimeField()
+    
+    def __str__(self):
+        return self.question_text
+    
+class Choice(models.Model):
+    choice_text = models.CharField(max_length=100)
+    votes = models.IntegerField(default = 0)
+    q = models.ForeignKey(Question,on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return "%s: %s" %(self.choice_text,self.q)
+
+
+-------------------------
+2.生成数据库中的表  
+python manage.py  makemigrations
+python manage.py migrate
+
+数据库中的表名结构是 ：应用名__类名 
+每张表都会自动生成名为id 的主键字段，每个类变量成为表中的一个字段  
+外键字段的名字是 ：类变量名__id   
+
+
+-------------------
+3.修改外键名字  
+Pycharm修改  >选择要修改的双击    按shift+F6  
+ vim  polls/models.py
+
+from django.db import models
+
+# Create your models here.
+class Question(models.Model):
+    question_txt = models.CharField(max_length=100)
+    pub_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.question_text
+
+class Choice(models.Model):
+    choice_text = models.CharField(max_length=100)
+    votes = models.IntegerField(default = 0)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "%s: %s" %(self.choice_text,self.question)
+
+---------------------------------
+4.将模型注册到后台管理界面  
+ （1）修改polls/admin.py  
+
+from django.contrib import admin
+from .models import Question,Choice
+
+admin.site.register(Question)
+admin.site.register(Choice)
+
+（2）在后台界面查看 
+
+
+
+-----------------------------------------
+
+https://yiyibooks.cn
+
+

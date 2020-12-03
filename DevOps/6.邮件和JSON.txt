@@ -1,0 +1,141 @@
+STMP   简单邮件传输协议  25  
+
+-----------------------------------------------------------------------------
+发邮件：
+1.准备邮件  
+主题、正文、收件人、发件人
+
+
+2.发邮件
+邮件服务器、用户名、密码、收件人、发件人 
+
+
+
+
+---------------------------------------------------------
+设置邮件
+• 标准邮件需要三个头部信息
+– From：发件人
+– To：收件人
+– Subject：主题 
+
+sendmail方法 ：Python SMTP 对象使用 sendmail 方法发送邮件 
+• sendmail方法三个必须的参数有：
+– 收件人
+– 发件人
+– 消息主体msg是一个字符串，表示邮件 
+
+
+
+from email.mime.text import MIMEText
+from email.header import Header
+from smtplib import SMTP
+
+message = MIMEText('python 邮件测试\r\n','plain','utf8')   #plain 表示纯文本
+message['from'] = Header('bill@gmail.com','utf8')  #from 发件人
+message['to'] = Header('GG@gmail.com','utf8') #收件人
+message['Subject'] = Header('smtp test','utf8')  #主题
+
+sender ='bill@google.com'
+receivers = ['gogo@google.com','root']
+smtp = SMTP('localhost')
+smtp.sendmail(sender,receivers,message.as_string())   #发送邮件 
+
+
+
+发外部邮件
+----------------------------------------------------------------------------------
+from email.mime.text import MIMEText
+from email.header import Header
+from smtplib import SMTP
+import getpass
+
+def send_mail(text,subject,sender,receivers,server,user,passwd,port):
+    message = MIMEText(text,'plain','utf8')   #plain 表示纯文本
+    message['from'] = Header(sender,'utf8')  #from 发件人
+    message['to'] = Header(receivers[0],'utf8') #收件人
+    message['Subject'] = Header(subject,'utf8')  #主题
+    smtp = SMTP()
+    smtp.starttls()   # 如果使用证书，打开此注释
+    smtp.connect(server,port)
+    smtp.login(user,passwd)
+    smtp.sendmail(sender,receivers,message.as_string())
+
+if __name__ == '__main__':
+    text = 'python邮件测试\r\n'
+    subject = 'smtp test'
+    port= 25
+    sender = 'asdf@gmail.com'
+    server = "smtp.gmail.com"
+    passwd = getpass.getpass()
+    receivers = ['asdg@gmail.com','tfdvdf@gmail.com']
+    send_mail(text,subject,sender,receivers,server,sender,passwd,25)
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
+                                                               JSON 概述 
+键值对集合 
+
+
+JSON:可以在网络中传输各种各样的数据类型，功能类似于pickle 模块 
+值的有序列表：在大部分语言中，它被理解为数组
+Python             JSON
+dict                  object
+list, tuple          array
+str                     string
+int,float             number
+True                   true
+False                   false
+None                    null
+
+-----------------------------------------------
+dumps方法  （转码）
+对编码后的json对象进行decode解码 ，得到原始数据，需要使用的 json.loads()函数 
+
+import json 
+adict = {'city':'广州','weather':'overcast'}
+j1 = json.dumps(adict)          //dumps之后可以在网络传输
+
+打印这个  '{"city": "\\u5e7f\\u5dde", "weather": "overcast"}'
+type(j1)
+<class 'str'>
+
+-------------------------------------------------
+loads方法   （译码）
+• 使用简单的json.dumps方法对简单数据类型进行编码 
+
+d1 = json.loads(j1)
+d1
+{'city': '广州', 'weather': 'relay'}
+type(d1)
+<class 'dict'>
+
+--------------------------------------------------------------------------------------
+                                                  查询天气  
+
+
+import json
+from urllib.request import urlopen
+bjsk = 'http://www.weather.com.cn/data/sk/101010100.html'   #查询北京天气预报 
+html = urlopen(bjsk)
+data = html.read()
+json.loads(data)
+{'weatherinfo': {'city': '北京', 'cityid': '101010100', 'temp': '27.9', 'WD': '南风', 'WS': '小于3级', 'SD': '28%', 'AP': '1002hPa', 'njd': '暂无实况', 'WSE': '<3', 'time': '17:55', 'sm': '2.1', 'isRadar': '1', 'Radar': 'JC_RADAR_AZ9010_JB'}}
+
+
+
+import json
+from urllib.request import urlopen
+html = 'http://www.weather.com.cn/data/cityinfo/101280102.html'
+data = urlopen(html)
+j1 =data.read()
+#print(j1.decode())
+j2 = json.loads(j1)
+
+print(type(data))
+print(type(j1))
+print(json.dumps(j2))
+
+

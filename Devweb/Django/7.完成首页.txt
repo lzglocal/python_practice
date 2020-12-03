@@ -1,0 +1,207 @@
+-------------------
+完成首页 
+1.修改视图函数，使之真正在数据库中取得所有的问题 
+vim polls/views.py
+
+from django.shortcuts import render
+from .models import Question
+
+def index(request):        #用户访问web发来的请求将作为参数request的值
+    questions = Question.objects.order_by("-pub_date")
+    return  render(request,"index.html",{"questions":questions})
+
+-------------------------------
+2.在模板中显示所有的问题
+vim polls/templates/index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>投票首页</title>
+</head>
+<body>
+    <h1>投票首页</h1>
+    <hr>
+{{ questions }}
+</body>
+</html>
+
+-----------------------------------
+3.修改模板语言修改 index.html
+模板语言中，变量使用{{ var }} 格式，其他标签使用 {{ % % }} ，在{{ % % }}中，变量不需要用双花括号 
+
+注：forloop.counter是循环的计数      {% for %}开始   {% endfor%}结束  
+vim polls/templates/index.html 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>投票首页</title>
+</head>
+<body>
+<h1>投票首页</h1>
+<hr>
+{% for question in questions %}
+    <p>
+        {{ forloop.counter}}.{{ question.question_text }} {{ question.pub_date}}
+    </p>
+{% endfor %}
+<!--#{{ questions }}}-->
+</body>
+</html>
+
+-------------------------------
+4.为问题添加超链接 
+vim  polls/tempates/index.html  
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>投票首页</title>
+</head>
+<body>
+<h1>投票首页</h1>
+<hr>
+{% for question in questions %}
+    <p>
+        {{ forloop.counter}}.
+        <!--    <a href="/polls/{{question.id}}/">{{question.question_text}}</a> 不推荐 -->           
+        <a href="{% url "detail" question_id=question.id %}">{{question.question_text}}</a>   推荐这个方法  
+        {{ question.pub_date}}
+    </p>
+{% endfor %}
+<!--#{{ questions }}}-->
+</body>
+</html>
+
+
+
+-----------------------------
+完成详情页 
+(1).修改视图函数，
+vim  polls/views.py
+
+def detail(request,question_id):
+    question = Question.objects.get(id=question_id)
+    return render(request,"detail.html",{'question':question})
+
+
+(2).修改模板文件，显示问题及其选项
+vim polls/templates/details.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>投票详情</title>
+</head>
+<body>
+<h1>详情</h1>
+<hr>
+<h2>
+{{ question.question_text }}
+<ul>
+    {% for choice in question.choice_set.all %}    //question.choice_set.all 在页面中不可以代括号  
+    <li>
+        {{ choice.choice_text}}
+    </li>
+    {%endfor%}
+</ul>
+</h2>
+</body>
+</html>
+
+
+(3)修改投票详情页，创建form表单 
+1、当用户投票是，将投票的数据发送到http://127.0.0.1/polls/1/vote/
+vim polls/urls.py
+
+url(r'^(?P<question_id>\d+)/vote/$',views.vote,name='vote'),
+
+2、http://127.0.0.1/polls/1/vote对应成一个函数。该函数可以将相应选项的票数加1 
+
+3.修改投票详情页，将上一步的ul改写为表单
+vim polls/templates/details.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>投票详情</title>
+</head>
+<body>
+<hr>
+<h2>{{ question.question_text }}</h2>
+
+<form action="{% url 'vote' question_id=question.id %} " method="post">
+    {% for choice in question.choice_set.all %}
+    <div>
+        <label><input type="radio" name="choice_id" value="{{ choice.id }}">{{ choice.choice_text}}</label>                        </div>
+    {% endfor %}
+    <input type="submit" value="投票">
+</form>
+
+</body>
+</html>
+
+4.编写投票函数，投票后跳转到投票详情页
+vim polls/views.py
+from django.shortcuts import render,redirect 
+
+def vote(request,question_id):
+    question = Question.objects.get(id=question_id)
+ #request.POST可以理解为一个字典，通过get方法获取表单提交的数据 
+    choice_id = request.POST.get('choice_id')
+    choice = question.choice_set.get(id=choice.id)
+    choice.votes+=1
+    choice.save()
+    return redirect('result',question_id=question_id)
+#注意 ：此处没有使用render 而是redirect 。render将会把request 请求中的数据再发给相应的页面。redirect是独立的，不会发送任何数据
+
+5.上一步完成后，提交表单时，出现403禁止访问，可以关闭CSRF功能 
+#mysite/setting.py
+vim mysite/settting.py  
+
+MIDDLEWARE = [
+...
+#  'django.middleware.csrf.CsrfViewMiddleware',   //防止跨站攻击 
+...
+]
+到处步完成，已经可以实现投票功能了。
+
+-------------------------------------
+（4） 完成投票结果页
+
+1.完成函数 
+vim  polls/views.py
+
+def result(request,question_id):
+    question = Question.objects.get(id=question_id)
+    return render(request,"result.html",{'question':question})
+
+2.修改polls/templates/result.html
+vim polls/templates/result.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>投票结果</title>
+</head>
+<body>
+<h1>投票结果</h1>
+<hr>
+<h2>{{ question.question_text }}</h2>
+<table border="1px">
+	{% for choice in question.choice_set.all %}
+	<tr>
+		<td>{{ choice.choice_text }}</td>
+		<td>{{ choice.votes }}</td>
+	</tr>
+                {% endfor %}
+</table>
+</body>
+</html>

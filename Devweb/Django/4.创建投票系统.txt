@@ -1,0 +1,188 @@
+----------------------------
+1.创建一个投票app
+数据 2张表
+question > 记录问题
+choice    > 记录每个问题的选项，以及该选项所得的票数
+ URL 所有的投票应用，网址都以 http://127.0.0.1/polls 开头 
+http://127.0.0.1/polls    > 投票首页，列出所有的问题
+http://127.0.0.1/polls/1/    1号问题的详情页
+http://127.0.0.1/polls/1/result/    > 1号问题投票的结果页   
+
+
+执行命令
+python mange.py  startapp polls   
+
+(test) [root@django polls]# tree
+.
+├── admin.py
+├── apps.py
+├── __init__.py
+├── migrations
+│   └── __init__.py
+├── models.py
+├── tests.py
+└── views.py
+-------------------------------
+2.授权，将以http://127.0.0.1 /polls /开头的url 都交给 polls 应用处理 
+修改 mysite/url.py    
+方法一 ：
+
+from django.contrib import admin
+from django.urls import url,include
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'polls/',include('polls.urls')),  
+]
+
+或修改为  
+方法二：
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('polls/',include('polls.urls')),
+]
+
+---------------------------------
+3.在polls应用下创建 urls.py  
+from django.conf.urls import url  
+
+urlpatterns = [
+         
+]
+
+---------------------------------
+4.创建投票首页 
+
+创建URL，指定使用哪个视图函数进行处理  
+vim polls/urls.py  
+
+from django.conf.urls import url
+from . import views        #使用相对导入的方式，在当前目录中导入的模块   
+#在http://X.X.X./polls/ 后面开始匹配 
+urlpatterns = [
+        #首页用views.index函数处理，为这个url起个名字叫index
+        url(r'^$',views.index,name='index')
+        ]
+
+--------------------------------------
+5.编写视图函数  
+vim  polls/views.py mkdir polls/template
+
+from django.shortcuts import render
+  
+# Create your views here.
+def index(request):        #用户访问web发来的请求将作为参数request的值
+   return  render(request,"index.html")
+
+------------------------------------
+6.创建模板(HTML网页)  
+创建polls/templates/ 目录  
+mkdir polls/template  
+vim index.html
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>投票首页</title>
+</head>
+<body>
+<h1>投票首页</h1>
+<hr>
+<ul>
+	<li>投票问题1</li>
+	<li>投票问题2</li>
+</ul>
+</body>
+</html>
+
+---------------------------------
+7.创建投票详情页  
+(1).配置polls/URL.PY
+在url.PY加入
+ url(r'\d+/$',views.detail,name='detail') 
+(2).编写视图函数
+vim  polls/view.py
+def detail(request):
+    return render(request,"detail.html")
+
+(3).编写投票详情 
+vim templates/detail.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>投票详情</title>
+</head>
+<body>
+<h1>详情</h1>
+<hr>
+这个是详情
+</ul>
+</body>
+</html>
+
+--------------------------------
+进一步完善 投票详情页
+
+1.修改URL，把问题编号作为参数传递给函数  
+polls/url.py
+ url(r'(^(?P<question_id>\d+)/$',views.detail,name='detail') 
+
+2.修改视图函数，函数接受参数，并将参数传递给模板 
+polls/views.py
+
+def detail(request,question_id):
+    return render(request,"detail.html",{'question_id':question_id})
+
+3.修改模板文件 
+polls/templates/detail.html
+
+这个第{{ question_id }}详情           //{{ }} 双括号里面传函数
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>投票详情</title>
+</head>
+<body>
+<h1>详情</h1>
+<hr>
+这个第{{ question_id }}详情
+</ul>
+</body>
+</html>
+
+
+-------------------------------
+结果页
+1.url   
+ url(r'(^(?P<question_id>\d+)/result/$',views.detail,name='detail') 
+2.views.py
+
+def detail(request,question_id):
+    return render(request,"result.html",{'question_id':question_id})
+
+3.result.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>投票结果</title>
+</head>
+<body>
+<h1>结果</h1>
+<hr>
+这个第{{ question_id }}结果
+</ul>
+</body>
+</html>
+
+

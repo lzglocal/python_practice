@@ -1,0 +1,237 @@
+fork 编程思路
+1. 父进程只负责生成子进程
+2.子进程做具体的工作，做完后务必结束退出 
+
+僵尸进程：
+1.父进程还在 
+2.子进程没有任何可执行代码了
+3.父进程没有处理僵尸进程的代码 
+
+------------------------------------------
+
+fork 网络编程思路：
+1. 父进程只负责接收新的客户端，生成子进程响应
+2、子进程与客户端收发数据，进行通信  
+
+-------------------------------------------------------------
+GIL:全局解释器锁 。它限制某一时刻只能有一个线程在使用解释器，多个线程需要轮流使用
+这样，导致某一时刻只有一个线程在工作 
+
+计算密集应用（cpu密集）：多进程可以提升效率
+IO密集应用： 多进程和多线程都可以提升效率 
+
+
+
+
+import os
+import sys
+import time
+
+print("starting")
+retval=os.fork()
+if not retval:
+    print("in child")
+    time.sleep(10)
+    exit()
+#waitpid 第一个参数-1 ，表示wait函数相同，第二个参数0表示挂起父进程，1表示不挂起。
+result=os.waitpid(-1,0)      父进程挂起，等待子进程结束  
+print(result)
+time.sleep(15)
+print("done")  
+
+
+---------------------------------------------------
+
+#!/usr/bin/python3
+import os
+import subprocess
+
+def ping(host):
+    rc = subprocess.call("ping -c2 %s >/dev/null" % host,shell=True)
+    if rc == 0:
+        print("%s:up" % host)
+    else:
+        print("%s:down" % host)
+
+if __name__ == '__main__':
+    ips = ("10.14.2.%d" % i for i in range(1,255))
+    for ip in ips:
+        retval = os.fork()
+        if not retval:
+            ping(ip)
+            exit()
+
+
+----------------------------------------------------------------
+#!/usr/bin/python3
+
+import socket
+import  os
+from time import  strftime
+
+
+class TcpServer:
+    def __init__(self,host="",port = 12345):
+        self.addr=(host,port)
+        self.s=socket.socket()
+        self.s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+        self.s.bind(self.addr)
+        self.s.listen(1)
+
+    def chat(self,cli_sock):
+        while True:
+            data = cli_sock.recv(1024)
+            if data.strip() == b"quit":
+                break
+            data = "[%s] %s" %(strftime("%H:%M:%S"),data.decode())
+            cli_sock.send ( data.encode () )
+
+    def run(self):
+        while True:
+            cli_sock,cli_addr =self.s.accept ()
+            retval = os.fork()
+            if not retval:
+                self.s.close()   #子进程只与客户端通信，用不到服务器套接字
+                self.chat(cli_sock)
+                cli_sock.close()
+                exit()
+            cli_sock.close()    #父进程只负责接收新客户端，用不到客户机套接字
+            while True:
+                result = os.waitpid(-1,1) #优先处理僵尸进程
+                print(result)
+                if result[0] == 0:  #如果没有僵尸进程，跳出循环 
+                    break
+        s.close()
+
+if __name__ == '__main__':
+    server =TcpServer()
+    server.run()
+
+--------------------------------------------------
+  1 #!/usr/bin/python3
+  2 
+  3 import time
+  4 import  os
+  5 def add(n = 50000000):
+  6     result = 0
+  7     for i in range(1,n+1):
+  8         result +=i
+  9     print(result)
+ 10 
+ 11 if __name__ == '__main__':
+ 12     start = time.time()
+ 13     for i in range(2):
+ 14         retval = os.fork()
+ 15         if not retval:
+ 16             add()
+ 17             exit()
+ 18     for i in range(2):
+ 19         os.waitpid(-1,0)
+ 20         end = time.time()
+ 21         print(end-start)
+
+
+----------------------------------------------------------------
+多线程  
+
+
+import threading
+import subprocess
+
+def ping(host):
+    rc = subprocess.call("ping -c2 %s >/dev/null" % host,shell=True)
+    if rc == 0:
+        print('%s:up' % host)
+    else:
+        print("%s:down" % host)
+
+if __name__ == '__main__':
+    ips = ("10.14.2.%d" % i for i in range(1,255))
+    for ip in ips:
+        t = threading.Thread(target=ping,args=(ip,))         #创建工作线程  
+        t.start()             #target(ip)  ==> target=ping 
+
+
+---------------------------------------------------------------
+多线程 调用类 
+
+import threading
+import subprocess
+
+class Ping:
+    def __init__(self,host):
+        self.host = host
+
+    def __call__(self):
+        rc = subprocess.call("ping -c2 %s >/dev/null" % self.host,shell=True)
+        if rc == 0:
+            print ( '%s:up' %self.host )
+        else:
+            print ( "%s:down" % self.host )
+
+if __name__ == '__main__':
+    ips = ("10.14.2.%d" % i for i in range(1,255))
+    for ip in ips:
+        t = threading.Thread(target=Ping(ip))
+        t.start()
+
+---------------------------------------------------------------------------
+#!/usr/bin/python3
+
+import socket
+import  threading
+from time import  strftime
+
+
+class TcpServer:
+    def __init__(self,host="",port = 12345):
+        self.addr=(host,port)
+        self.s=socket.socket()
+        self.s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+        self.s.bind(self.addr)
+        self.s.listen(1)
+
+    def chat(self,cli_sock):
+        while True:
+            data = cli_sock.recv(1024)
+            if data.strip() == b"quit":
+                break
+            data = "[%s] %s" %(strftime("%H:%M:%S"),data.decode())
+            cli_sock.send ( data.encode () )
+        cli_sock.close ()
+
+    def run(self):
+        while True:
+            try:
+                cli_sock,cli_addr =self.s.accept ()
+            except KeyboardInterrupt:
+                print()
+                break
+            t = threading.Thread(target=self.chat,args=(cli_sock,))
+            t.start()
+        self.s.close()
+
+if __name__ == '__main__':
+    server =TcpServer()
+    server.run()
+
+------------------------------------------------------------------
+import time
+import  threading
+def add(n = 50000000):
+    result = 0
+    for i in range(1,n+1):
+        result +=i
+    print(result)
+
+if __name__ == '__main__':
+    start = time.time()
+    tlist = []
+    for i in range(2):
+        t = threading.Thread(target=add())
+        t.start()
+        tlist.append(t)
+        end = time.time()
+        print(end-start)    
+
+-------------------------------------------------------------------

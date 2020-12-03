@@ -1,0 +1,124 @@
+函数是用def 语句来创建的，语法如下：
+def function_name(arguments):
+"function_documentation_string"
+function_body_suite   
+
+例如：
+def generate_fib():
+    fib = [0,1]
+    for i in range(8):
+        fib.append(fib[-1]+fib[-2])
+    return fib
+
+
+
+generate_fib()                  #调用函数，即将函数内的代码运行一遍 
+alist = generate_fib()  
+print(alist)
+blist = [i*2 for i in alist]
+print(blist)   
+
+---------------------------------------------------------------------------------------------------------
+def generate_fib(n):
+    fib = [0,1]
+    for i in range(n-2):
+        fib.append(fib[-1]+fib[-2])
+    return fib
+
+a = generate_fib(10)
+print(a)
+b = generate_fib(20)
+print(b)
+x = int(input("length:"))
+c = generate_fib(x) 
+print(c)
+
+——————————————————————————————————————）））
+                                    定义参数 
+1.形式参数（形参）
+2.实际参数（实参）
+3.默认参数
+
+
+--函数定义时，紧跟在函数名后（圆括号内）的参数被称为形式参数，简称形参。
+ 由于它不是实际存在变量所以又称虚拟变量
+--实际参数
+--在主调函数中调用一个函数时，函数名后面包括弧中的参数（可以是一个表达式）
+"实际参数"，简称实参
+--默认参数，定义函数时的设置默认参数
+------------------------------------------------------------------------------------------
+import sys
+                         
+print(sys.argv)           #sys.argv是模块中名为argv的列表，用于存储位置参数
+
+写一个cp命令 在Linux运行
+
+import sys
+def copy(src_fname,dst_fname):          
+    with open(src_fname,"rb") as src_fobj:
+        with open(dst_fname,"wb") as dst_fobj:
+            while True:
+                data = src_fobj.read(4096)
+                if not data:
+                    break
+                dst_fobj.write(data)
+copy(sys.argv[1],sys.argv[2])
+
+----------------------------------------------------------
+def pstar(n=30)
+     print("*"*n)
+
+pstar()    #调用函数默认为打印30
+pstar(50)  #打印50 
+
+—————————————————————————————————————————
+          模块：
+模块就是一个.py的文件，把文件名的.py移除掉就是模块名  
+比如：一个文件夹有两个文件star.py 和test.py 
+
+star.py中：
+  hi = "hello world!"
+def pstar(n=30):
+     print("*"*n)
+
+test.py 中：
+import star
+print(star.hi)
+star.pstar(10)
+           在cp.py 中使用import star 就是使用star模块  
+
+
+-----------------------------------------------------------------------------------------------
+                      生成随机密码
+创建randpass.py 脚本，要求如下：
+1.编写一个能生成8位随机密码的程序
+2.使用random的choice函数随机取出字符
+3.改进程序，用户可以自己决定生成多少位的密码
+
+import random
+import string
+all_chs = string.ascii_letters+string.digits 
+
+def randpass(n=8):
+    result =""
+    
+    for i in range(n):
+        ch = random.choice(all_chs)
+        result+=ch         
+    return result
+
+if __name__ == '__main__':
+    a = randpass()
+    print(a)
+    print(randpass(4))
+
+
+
+
+
+
+
+
+
+
+

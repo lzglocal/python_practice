@@ -1,0 +1,262 @@
+                       字典和集合/文件系统
+写入字典
+adict = {"name":"bob","age":20}
+dict = (["ab","cd",("name","niu")])
+{}.fromkeys(["niu","wang","li"],"male")
+
+查询字典
+判断
+20 in adict 
+False
+"age" in adict
+True
+
+查询
+for key in adict:
+    print("%s:%s" % (key,adict[key)]))
+print("%(name)s is %(age)s years old" %adict)
+-------------------------------------------------------------------
+
+
+通过key更新字典，如果key不在字典中则增加新增，在字典中则修改
+
+adict["email"] = "bob@tudu.cn"
+print(adict)
+{'name': 'bob', 'age': 20, 'email': 'bob@tudu.cn'} 
+
+adict["age"] = 22
+print(adict)
+{'name': 'bob', 'age': 22, 'email': 'bob@tudu.cn'}
+----------------------------------------------------------------
+adict.keys()  #查询key的值或 直接adict 
+
+for key in adict.keys():
+      print(key)
+或者
+for key in adit:
+      print(key)
+list(adict.values())
+
+for key,val in adict.items():
+      print("%s: %s" % (key ,val) )
+
+字典内建方法
+dict.copy()
+dict.get(key,default = none)
+dict.items()
+
+
+adict[phone]                    #没有会报错
+adict.get("phone")                #没有指定则none 获取key为phone的值  ，重点
+adict.get("phone","110")            #获取key为phone的值，没有返回110
+adict.popitem()                             #随机弹出一项
+adict.pop("email")                            #弹出key是email的项
+adict.update({"aaa":100,"bbb":200})
+print(adict.get("phone") )                     #获取获取key为phone的值 
+
+要把Unix 文档换行转为windows文本换行，>>>> 使用命令Unix2dos  文件名  
+
+要把windows 文档换行转为Unix文本换行，>>>> 使用命令dos2Unix  文件名  
+
+
+————————————————————————————————————————
+                 编写类进度条程序
+1.在屏幕上打印20个#号
+2.符号@从20个#号穿过
+3.当@符号到达尾部，再从头开始
+
+import time
+import sys
+n = 0
+print("#"*19,end="")
+b = "\033[32;1m@\033[0m"
+while True:
+    print("\r%s%s%s" % ("#"*n,b,"#"*(19-n)),end="")     # \r 回车不换行 
+    sys.stdout.flush()                    # 立即在屏幕上输出，不要放到缓冲区
+    n+= 1
+    time.sleep(0.3)
+    if n == 20:
+        n = 0
+
+——————————————————————————————————————————
+                                                     集合
+集合 ：由不同元素组成的set，元素只能是不可变对象。相当于是无值的字典
+
+集合类型操作符
+
+集合支持用in 和not in 操作符检查成员
+能够通过len() 检查集合大小
+能够使用for 迭代集合成员
+不能去切片，没有键
+
+len(aset)
+4
+for ch in aset:
+    print(ch)
+l
+e
+o
+h
+------------------------------
+              集合类型操作符
+
+ |   联合，取并集
+&  交集
+-   差补
+----------------------------
+bset = set("how")
+aset = set("hello")
+aset
+{"h","o","l","o"}
+bset
+{"h","w","o"}
+
+aset | bset           #并集
+{"w","e","h","
+
+aset+bset  # 报错
+
+aset & bset         #交集
+{"h","0"}
+
+aset - bset           #差补，aset中有，bset中没有的元素 
+------------------------------------------------------
+           集合内建方法
+
+set.add()              添加成员
+set.update()          批量添加成员
+set.remove()          移除成员
+
+aset = set("hello")
+aset.add("new")
+aset
+{"h","o","l","e","new"}
+
+aset.update("new")
+aset
+{"h","o","l","e","new","n"}
+
+aset.update(["hello","world"])
+aset
+{"h","o","l","e","new","n","hello","wolrd"}
+
+aset.remove("n")
+aset
+{"h","o","l","e","new","hello","wolrd"}
+
+cset = set("ho")
+cset.issubset(aset)               #cset 是aset的子集吗
+aset.issuperset(cset)            # aset 是cset的超集吗
+aset.intersection(bset)          #aset & bset    交集
+aset.union(bset)                  #aset | bset      并集
+aset.difference(bset)             #aset - bset    补差
+
+-----------------------------------------------------------
+cp /etc/passwd /tmp/
+cp /etc/passwd /tmp/mima
+
+修改mima，使之与passwd不完全一样
+with open("/tmp/mima")  as f:
+    aset = set(f)
+with open("/tmp/passwd") as f:
+    bset = set(f)
+with open("/tmp/result.txt","w") as f:
+    f.wirtelines(aset - bset)
+
+___________________________________________________________________________________
+
+         time 模块  
+
+import time 
+time.time()          # 返回时间戳 ，自1970-1-1 0:00:00 到执行命令期间的秒数 （常用）
+time.ctime()         #当前日期、时间    （常用）
+time.localtime()    #返回九元组格式时间
+time.sleep(3)        #睡眠3秒  （常用）
+time.strftime("%Y-%m-%d %H:%M:%S")          
+
+
+datetime模块
+ 
+from datetime import datetime ,timedelta 
+t1 = datetime.now()      #把当前时间转换成时间对象
+t1.year  
+t1.month
+t1.day
+t1.hour
+t1.minute
+t1.second
+t1.microsecond
+t2 = datetime(2018,10,10)
+  #转换字符串为datetime对象
+t1 = datetime.strptime("Dec 12 2018","%b %d %Y")
+t = datetime(2018,12,10)
+t1>t
+
+t = datetime.now()
+days = timedelta(days = 100)
+t1 = t -days
+t2 = t +days
+---------------------------------------------------------------------------------------------
+                    异常
+
+当程序运行时，因为遇到未解的错误而导致中止运行，便会出现traceback消息，打印异常
+
+   异常                        描述
+NameError                 未声明/初始化对象
+IndexError                  序列中没有没有此索引
+SyntaxError                 语法错误
+KeyboardInterrupt      用户中断执行
+EOFError                     没有内建输入，到达EOF标记
+IOError                       输入/输出操作失败
+
+-------------------------------------------------------------------------------
+try:
+    num=int(input("number:"))          #把有可能发生异常的语句放到try中
+    result=100/num
+    print(result)
+except (ValueError,ZeroDivisionError):       #捕获异常
+    print("无效输入，必须输入非0数字")
+except (KeyboardInterrupt,EOFError):
+    print("\nBye-bye")
+
+else:
+    print(result)             #异常不发生才执行的语句，放到else中
+finally:
+    print("DONE")         #不管是否发生异常都要执行的语句，放到finally中
+
+# try - except  和try - finally 这两种组合用的多
+
+ ---------------------------------------------------------------------------------
+def set_age(name,age):
+    if not 0<age<150:
+        raise ValueError("年龄超过范围了（1-150）")
+    print("%s现在是%s岁了" %(name,age))
+
+def set_age2(name,age):
+    assert 0<age<150,"年龄超过范围了(1-150)"
+    print("%s现在是%s岁了" %(name,age))
+
+if __name__ == '__main__':
+    set_age("大牛",22)
+    set_age2("神通",255)
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

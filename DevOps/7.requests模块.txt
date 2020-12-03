@@ -1,0 +1,125 @@
+--------------------------------------------------------------------------------------------------
+
+                                                               requests 模块基础 
+
+requests简介
+• Requests是用Python语言编写的、优雅而简单的HTTP库
+• Requests内部采用来urillib3
+• Requests使用起来肯定会比urillib3更简单便捷
+• Requests需要单独安装 
+
+requests特性
+• 支持keep-alive的连接池
+• 支持通用的域名以及URL地址
+• 支持使用cookie
+• 支持使用类似浏览器的SSL验证
+• 文件上传、下载
+
+--------------------------------------------------
+requests模块，底层采用了urllib3  
+安装 
+php install  requests
+import requests
+
+------------------------
+常用的 GET 和  POST 
+GET  
+• 通过requests发送一个GET请求，需要在URL里请求
+的参数可通过params传递
+
+r=requests.get(url="",params={},headers={},cookies={})
+
+--------------------
+ POST
+• 与GET不同的是，POST请求新增了一个可选参数
+data，需要通过POST请求传递的body里的数据可以
+通过data传递
+r=requests.post(url="",data={},params={},	file={},headers={},cookies={})	
+	
+-------------------
+其他方法
+• 其他 HTTP 请求类型：PUT，DELETE，HEAD 以及
+OPTIONS使用起来一样简单
+>>>r=requests.put('hap://hapbin.org/put',data={'key':'value'})	
+>>>r=requests.delete('hap://hapbin.org/delete')	
+>>>r=requests.head('hap://hapbin.org/get')	
+>>>r=requests.opPons('hap://hapbin.org/get')	
+
+---------------------------------------------------------------------------------
+操作：get
+
+
+（1）对于普通文件，使用r.text返回str 类型的数据
+r = requests.get('http://127.0.0.1')
+r.text  
+
+r = requests.get('http://www.163.com')
+r.text
+r.encoding         #查看字符编码 
+r.encoding = 'gbk'   #修改字符编码
+
+（2）对于非文本，使用r.content 返回bytes类型数据
+r = requests.get('https://portal.letcdn.com/assets/site/img/logo.png')
+with open(r"D:\a.png","wb") as fjob:
+    fjob.write(r.content)
+
+（3）对于json格式，requests内建了json方法，使用r.json() 返回相应数据
+r = requests.get('http://www.weather.com.cn/data/cityinfo/101280102.html')
+r.json()
+r.encoding = 'utf8'
+r.json()
+
+
+--------------------------------------------------------------------------------------
+get
+3.传递参数  
+
+import json   
+
+params = {'q':'图片'}
+r = requests.get("https://google.com/search",params=params)
+with open(r'F:\test.html','wb') as fobj:
+    fobj.write(r.content)
+
+
+----------------------------------------------------------------------------------
+get 
+4.修改头部
+
+headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36'}
+r = requests.get('https://google.com/',headers=headers)
+
+
+
+--------------------------------------------------------------------------------
+钉钉机器人  
+
+
+import requests
+import json
+import sys
+
+def ding_talk(url):
+    headers = {'Content-Type':'application/json;charset=utf-8'}
+    data = {
+    "msgtype": "text",
+    "text": {
+        "content": "我就是我, 是不一样的烟火@156xxxx8827"
+    },
+    "at": {
+        "atMobiles": [
+            "156xxxx8827",
+            "189xxxx8325"
+        ],
+        "isAtAll": False
+    }
+}
+    r = requests.get(url,data =json.dumps(data),headers=headers)
+    return r.json()
+
+if __name__ == '__main__':
+   url ='https://oapi.dingtalk.com/get_jsapi_ticket?access_token=b6259bfb4bd5327f95136cf7005d5eca'
+  # content = sys.argv[1]
+   print(ding_talk(url))
+
+

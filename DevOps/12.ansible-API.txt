@@ -1,0 +1,10 @@
+---------------------------------------------------------------------
+                                         ansible-API
+
+http://docs.ansible.com 
+https://docs.ansible.com/ansible/latest/index.html         ->  搜索python API   找到后把 example 代码复制过来修改 
+
+
+
+
+

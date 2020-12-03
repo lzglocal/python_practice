@@ -1,0 +1,162 @@
+一 .python 数据类型
+
+1.数字
+（1）int整数（有符号整数，没有小数点）
+（2）bool布尔值 ：Ture/false        Ture=1 , false=0 
+（3）float浮点数：有小数点
+（4）complex复数：共轭复数
+对于整数，没有任何前缀Python默认识别为10进制数
+以0o开头表示8进制，0b开头表示2进制 ， 以0x开头表示16进制
+
+2.字符串
+在引号中一系列字符，单双引号没有区别
+三引号：三个连续的单引号或者双引号。它能够保存输入的格式，允许多行输入
+
+3.字符串切片
+下标和切片操作
+第一个字符索引是0 ，最后一个字符的索引是-1  
+索引下标运算符[]   切片运算符[:]      [::2] 表示步长值
+
+py_str="Python"
+len(py_str)        #查询长度
+print("len(py_str)")  #打印py_str变量的长度
+py_str[0]           #下标从0开始"Python"[0] 意义一样
+print(py_str[0])   #可以截取字符串第一个字符
+py_str[6]            #索引超出范围，报错
+py_str[len(py_str) -1]   #字符串总长度减一，得到最后一个字符的下标
+py_str[-1]       #也可以得到最后一个下标
+
+py_str[2:4]   #表示下标包含，结束下标不包含
+py_str[2:6]   得到 ‘thon’  
+py_str[2:600]  #下标超出范围，切片不报错 ‘thon’
+py_str[2:]     #结束下标不写，表示取到结尾
+py_str[0:2]   得到‘py’  
+py_str[:2]    得到 ‘py’  #开始下标不写，表示从开头开始
+py_str[2:5]   得到  "tho"  #从2开始到5结束 5-2=3
+py_str[::2]   得到   "pto"    #表示步长值是2
+py_str[1::2]   得到  "yhn"   #从1开始步长值是2
+py_str[::-1]   得到  "nohtyp"  #表示从右向左取步长值为-1 
+
+py_str + " is cool"    #+号表示简单拼接
+print(py_str + " is cool" )  得到 Python is cool   
+"*" * 50         # *号重复50次
+print("*" * 50)  得到 **********************************
+print（py_str * 3） 得到 PythonPythonPython
+
+
+"t"  in py_str       
+print("t"  in py_str )   得到 True
+"to"  in py_str     
+print("to"  in py_str  ) 得到 False 
+print("to"  not in py_str  )   得到 True 
+
+-------------------------------------------------------------------------------------------------------------
+
+定义列表
+可以将列表当成普通的“数组" ，它能保存任意数量，任意类型的Python对象
+列表: 它是一个容器，可以存放各种数据
+
+alist = [10 ,20 ,"li" ,"da",[1,2]]
+print(len(alist))   得到5
+alist[2:4]   
+print(alist[2:4])  得到 ["li","da"]
+alist[-1] =100     #列表项可以重新赋值
+print(alist)   得到[10,20,"li","da","100"]
+alist.append(200)    #向列表尾部增加一项
+print(alist)   得到 [10,20,"li","da","100","200"]  
+
+
+元组 ：相当于是静态的列表，它的项目不可变
+atuple =(10,20,"li","da")
+atuple[-1]
+print(atuple[-1])  得到  da
+atuple[0] =100  #报错，元组不能修改
+
+字典
+采用key：val 对存储的数据类型，key不能重复
+adict={"name":"大锤","age":18}
+adict["name"]          # 通过key取出value
+print(adict["name"])  得到 大锤
+18 in adict   得到 Flase  
+"age" in adict  得到True
+adict["sex"]="female"   #key不在字典中则增加一项   
+print(adict)     得到{"name":"大锤","age":18,"sex":"female"}
+adict["age"]=20            # age已是字典的key，修改age的值
+print(adict)    得到{"name":"大锤","age":20,"sex":"female"}
+
+
+—————————————————————————————
+按数据类型比较         -----------------------重要、必须背下来
+按存储模型分类
+-标量类型 : 数值、字符串                  标量：只有一种类型，不能存储其他类型。数字、字符串
+-容器类型：列表、元组、字典            容器：能包含各种数据。列表、元组、字典
+
+按更新模型分类
+-可变类型：列表、字典
+-不可变类型：数字、字符串、元组
+
+按访问模型分类
+-直接访问：数字
+-顺序访问: 字符串、列表、元组
+-映射访问：字典
+----------------------------------------------------------------------
+例如：
+alist = [10 ,20 ,"li" ,"da",[1,2]]   
+blist = alist
+blist.append(30)
+print(alist) 得到[10 ,20 ,"li" ,"da",[1,2],30]
+print(blist)  得到  [10 ,20 ,"li" ,"da",[1,2],30]   变得一样所以写程序容易出现bug
+
+blist=alist.copy()
+blist.append(30)
+print(alist) 得到[10 ,20 ,"li" ,"da",[1,2]]
+print(blist)  得到  [10 ,20 ,"li" ,"da",[1,2],30]  
+
+------------------------------------------------------------------------------------------------
+
+if 判断
+words = "tom\njeff\njay\nmikes"
+if "tom" in words :
+    print("yes")
+if "tom" not in words :
+    print("not in")
+else:
+    print("tom in words")
+
+if -0.0 : 
+    print("0k")             #任何值为0的数字都是False，非0为True  //这里不打印
+
+if -0.01 :
+    print("-0.01 is ok")    #这里可以打印True
+   
+if  '  ' :
+    print("space is true")   #任何非空对象都是True ，空位False ，打印   
+
+if  '' :
+    print("空字符串是False")  #False不打印  
+
+if None:
+    print("None也是False，表示空")   #False不打印
+-------------------------------------------------------------------------------------------
+判断合法用户
+1.创建login2.py
+2.提示用户输入用户名和密码
+3.获取相关信息后，将其保存存在变量中
+4.如果用户的用户名为bob，密码为123456，则输出Login successful，否则输出Login inorrect
+
+import getpass       #导入名为getpass的模块
+
+username = input
+
+
+
+
+
+
+
+
+
+
+
+
+

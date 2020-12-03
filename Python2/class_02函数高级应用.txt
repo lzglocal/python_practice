@@ -1,0 +1,268 @@
+                   函数高级应用                           
+
+-----------------------------------------------------------------------------------------
+变量作用域       
+
+
+
+
+                                全局变量               # 从定义开始到程序结束
+
+                             局部变量                #函数内的变量是局部变量，局部变量当函数调用结束后就消失
+
+                             global语句           # 局部改变全局的值,
+
+                             名字空间             # 名字空间，标识符搜索顺序依次是 局部 、全局、和内建 
+                                                       #如果两个函数中有同名变量，两个同名变量没有关系
+                                                      #局部变量不会改变全局变量的值
+
+x = 10 
+def test2(): 
+    global   x                                     #声明这里的  x 是全局变量 x
+    x = "zhangsan"
+    print(x)
+
+
+
+、
+
+tests()
+得到 zhangsan                          #改变了原本全局变了 x =10 
+
+函数作用域   ---> 局部 、全局、内建 依次搜索
+
+————————————————————————————————————————————
+函数式编程             
+
+
+                              偏函数                      #相当于是改造现有函数，将其一部分参数固定下来
+
+                              递归函数     
+ 
+                              生成器
+
+
+
+
+普通函数
+def add(a,b,c,d):
+    return a+b+c+d
+add(10,20,30,40)              
+add(10,20,30,123)                                    #每次10,20,30 都没有改变可以改以下偏函数
+
+
+偏函数例子:  
+from functools import partial 
+    myadd = partial(add,10,20,30)
+
+myadd(5)                                                    #得到是10+20+30+5 的值
+
+
+from operator import add
+from functools import partial
+add10 = partial(add,10)
+print(add10(25))                                       #得到10+25
+35
+-----------------------------
+
+import tkinter
+from functools import partial
+
+root = tkinter.Tk()    #相当于创建一个窗体
+lb =tkinter.Label(root,text="hello world",font="arial 20")
+b1 = tkinter.Button(root,bg="blue",fg="white",text="Button 1")
+mybutton = partial(tkinter.Button,root,bg="blue",fg="white")       #使用偏函数
+b2 = mybutton(text="Button 2")
+b3 = mybutton(text="Button 3")
+b4 = mybutton(text="Quit",command=root.quit)
+for item in [lb,b1,b2,b3,b4]:
+    item.pack()
+
+root.mainloop()
+
+————————————————————————————————————
+                                            递归函数
+如果函数包含了对其自身的调用，该函数就是递归的在操作系统中，
+查看某一目录内所有文件、修改权限等都是递归的应用
+
+def func1(n):
+    if n == 1:
+        return 1
+    return n *func1(n-1)
+                                                        # 5* func(4)
+                                                         #5*4*func(3)
+if __name__ == '__main__':
+    print(func1(5))   
+
+--------------------------------
+from random import randint
+
+def quick_sort(seq):
+    if len(seq)<2:
+        return seq
+    middle = seq[0]
+    smaller = []
+    larger = []
+    for item in seq[1:]:
+        if item<middle:
+            smaller.append(item)
+        else:
+            larger.append(item)
+    return quick_sort(smaller) +[middle]+quick_sort(larger)
+if __name__ == '__main__':
+    nums = [randint(1,100) for i in range(10)]
+    print(nums)
+    print(quick_sort(nums))
+_________________________________________________________________________________________________
+
+                                                 生成器  
+从句法上讲，生成器是一个带yield语句的函数
+一个函数或者子程序只返回一次，但一个生成器能暂停执行并返回一个中间的结果
+yield语句返回一个值给调用者并暂停执行
+当生成器的 next()  方法被调用的时候，它会准确地从离开地方继续
+
+生成器：本质上是函数，但是它能生成多个中间值，而函数只有一个最终值 
+生成器节省内存，更加有效率
+
+ips = ["192.168.1.%s" %i for i in range(1,255)]             #方括号是生成列表
+print(ips)
+hosts = ("192.168.1.%s" %i for i in range(1,255))         #圆括号变成生成器
+print(hosts)                                         #得到 <generator object <genexpr> at 0x000001A07F3CBCC8>
+
+for host in hosts:
+    print(host)
+-------------------------------------------------------------
+    生成器通过yield生成多个中间结果
+
+def mygen():
+    yield 100
+    print("-------------------")
+    yield 200
+    print("####################")
+    yield 300
+
+a = mygen()
+a.__next__()            #得到100
+a.__next__()               #得到200
+x = a.__next__()           #赋值给x
+x                                #得到300
+a.__next__()                   #没有数据将会抛出StopIteration 异常，生成器对象是一次性的
+         
+for item in b:           #for 可以遍历生成器，遇到StopIteration 自动停止
+    print(item)
+
+---------------------------------------------------------------------
+
+生成器例子：每次获取文件10行数据
+def file_block(fobj):
+    content = [ ]
+    for line in fobj:
+        content.append(line)
+        if len(content) == 10:        # 10行生成一次  
+            yield content
+            content.clear()               #生成数据交给使用者用清空,以便存 下10行               
+
+    if content:                      #如果循环结束后还有数据，生成最后不到10行的内容                        
+        yield content
+        
+if __name__ == '__main__':
+    fname = "/etc/passwd"
+    fobj = open(fname)
+    for block in file_block(fobj):
+        print(block)
+    fobj.close()
+
+
+-------------------------------------
+内部函数                  闭包
+                               闭包实例
+                               装饰器
+
+——————————————————————————————————————————
+                      闭包
+闭包将内部函数自己的代码和作用域以及外部函数的作用结合起来
+闭包的词法变量不属于全局名字空间域或者局部的--而属于其他的名字空间，带着"流浪"的作用域
+闭包对于安装计算，隐匿状态，以及在函数对象和作用域中随意地切换时很有用的
+闭包也是函数，但是他们能携带一些额外的作用域
+
+--------------------------
+创建通用的计数器
+
+import tkinter
+from functools import partial
+
+def pstar():
+    print("*"*30)
+
+# def hello():
+#     lb.config(text="Hello China")
+# def welcome():                                       #使用了say_hi 代替
+#     lb.config(text="hello TEDU")
+
+def say_hi(word):
+    def greet():
+        lb.config(text="Hello %s" % word)
+    return greet
+
+root=tkinter.Tk()                #相当于创建一个窗体
+lb = tkinter.Label(root,text="Hello World!",font="Arial 20")
+MyButton = partial(tkinter.Button,root,bg="blue",fg="white")
+b1 = MyButton(text="Button 1",command=pstar)
+b2=MyButton(text="Button 2",command=say_hi("China"))         #使用闭包函数
+b3=MyButton(text="Button 3",command=say_hi("Tedu"))
+b4=MyButton(text="Quit",command=root.quit)
+for item in [lb,b1,b2,b3,b4]:
+    item .pack()
+
+root.mainloop()
+
+————————————————————————————————————————
+                                    装饰器
+装饰器是在函数调用之上的修饰
+这些修饰仅是当声明一个函数或者方法的时候，才会应用的额外调用
+使用装饰器的情形有：
+                             -引入日志
+                             -增加计时逻辑来检测性能
+                             -给函数加入事务的能力
+
+------------------------------------------------------
+def set_color(func):
+    def set_red():
+        return "\033[31;1m%s\033[0m" % func()
+    return set_red()
+
+def hello():
+    return "Hello World"
+
+@set_color                       装饰器使用
+def welcome():
+    return "Hello China"
+
+@set_color
+def mytest():
+    a = 10+10
+    return a
+
+if __name__ == '__main__':
+    # print(hello())
+    # print(welcome())
+    hello = set_color(hello)
+    print(hello())
+    print(welcome())
+    print(mytest())
+
+--------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+

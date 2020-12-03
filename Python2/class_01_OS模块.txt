@@ -1,0 +1,90 @@
+                      OS模块简介
+
+·对文件系统的访问大多通过Python 的os模块实现
+·该模块是Python访问操作系统功能的主要接口
+·有些方法，如copy等，并没有提供，可以使用shutil模块作为补充
+---------------------------------------------------------------------------------------------
+     函数                             作用
+os.symlink()                    创建符号链接（软连接）
+os.listdir()                          列出指定目录的文件
+os.getcwd()                          返回当前工作目录
+os.mkdir()                               创建目录
+os.chmod()                                改变权限模式
+os.getatime()                                 返回最近访问时间
+os.chdir()                                          改变工作目录              
+os.remove                                          删除文件（只能删除文件和空目录）
+os.rmdir                                             删除空目录
+os.removedirs                                       
+shutil.r                                                     
+os.rename                                           重命名
+os.
+
+
+---------------
+ import os                             
+                                                 相当于Linux命令
+os.getcwd()                            #pwd
+os.mkdir("/tmp/demo")          #mkdir  /tmp/demo
+os.chdir("/tmp/demo")            #cd   /tmp/demo
+os.listdir()                                 # ls
+os.listdir("/home")                      #ls /home
+os.mknod("mytest.txt")                 # touch  mytest.txt
+os.symlink("/etc/hosts","zhuji")      #ln -s /etc/hosts   zhuji
+os.unlink("zhuji")                            #删除软连接
+os.chmod("mytest.txt")                    #chmod    mytest.txt
+os.rename("mytest.txt","test.doc")      #mv  mytest.txt   test.doc 
+os.remove("zhuji")                                # rm -f    zhuji
+os.rmdir("/tmp/devops")                        #删除空目录 
+os.path.basename("/etc/sysconfig/network")       #从/etc/sysconfig 切割network  
+os.path.dirname("/etc/sysconfig/network")            #目录名称
+os.path.join("/etc/sysconfig","network")
+os.path.isfile("/etc/hosts")                         #是一个文件吗
+os.path.isdir("/etc/hosts")                      #是一个目录吗
+os.path.exists("/etc/hosts")                      #是否存在
+os.path.islink("/etc/hosts")                         #是链接吗
+
+______________________________________________________________________________________________________
+                                           pickle存储器
+普通的文件只能把字符类型数据写入到文件中，pickle可以把任意类型的数据存储到文件中，
+将来还能无损地取出。
+
+f = open("/tmp/mydata","w")
+f.write("hello world!\n")
+f.write(100)                         #不允许写入数字
+f.write({"name:"bob"})          #不允许写入字典
+f.close()  
+-----------------------------------------------------------------------
+import pickle as p                    #导入模块时，为其取别名p
+f = open("/tmp/data","wb")
+adict = {"name":"bob","age":23}
+p.dump(adict,f)                            #将字典存入文件
+f.close()
+
+---------------------------------------------------------------------
+import pickle as p
+f = open("/tmp/data","rb")
+mydict = p.load(f)                                #加载赋值   
+f.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

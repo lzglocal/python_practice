@@ -1,0 +1,281 @@
+                                tarfile模块 
+tarfile 模块允许创建、访问tar文件
+同时支持 gzip 、bzip2格式 
+
+tarfile: 实现压缩、解压缩、可以调用gzip 、bzip2等
+----------------------------------------------------------------
+import tarfile
+import os
+tar = tarfile.open("/tmp/security.tar.gz","w:gz")
+os.chdir("/etc")
+tar.add("security")
+tar.close()
+
+os.mkdir("/tmp/demo")
+tar = tarfile.open("/tmp/security.tar.gz","r:gz")
+tar.extractall(path="/tmp/demo")
+tar.close()
+
+---------------------------------------------------------------------
+                                  备份程序
+1.需要支持完全和增量备份
+2.周一执行完全备份
+3.其他时间执行增量备份
+4.备份文件需要打包为tar文件并使用gzip格式压缩
+
+构思——备份：
+1.完全备份
+       （1）压缩整个目录
+        （2）计算每个文件的MD5值
+2.增量备份
+          （1）取出前一天文件的md5值
+          （2）计算当前每个文件的md5值
+           （3） 新增文件和有变化文件需要备份
+            （4）更新MD5值
+-----------------------------------------------------------------------------------------------
+from time import strftime
+import os
+import tarfile
+import pickle
+import hashlib
+
+def check_md5(fname):
+    m = hashlib.md5()
+    with open(fname,"rb") as fobj:
+        while True:
+            data = fobj.read(4096)
+            if not data:
+                break
+            m.update(data)
+    return m.hexdigest()
+
+def full_backup(folder,dest,md5file):
+    md5_dict = {}      #用于保存每个文件的MD5值{“文件绝对路径” ：md5值}
+    fname = os.path.basename(folder.rstrip("/"))
+    fname = "%s_full_%s.tar.gz" % (fname,strftime("%Y%m%d"))
+    fname = os.path.join(dest,fname)  #目标文件的绝对路径
+
+    tar = tarfile.open(fname,"w:gz")   #压缩
+    tar.add(folder)
+    tar.close()
+
+    for path,folders,files in os.walk(folder):
+        for file in files:
+            key = os.path.join(path,file)      #拼出绝对路径
+            md5_dict[file] = check_md5(file)    #写入MD5字典
+
+    with open(md5file,"wb") as fobj:          #字典写入文件
+        pickle.dump(md5_dict,fobj)
+
+
+
+
+def incr_backup(folder,dest,md5file):
+    md5_dict={}  # 用于保存每个文件的MD5值{“文件绝对路径” ：md5值}
+    fname=os.path.basename(folder.rstrip("/"))
+    fname="%s_full_%s.tar.gz"%(fname,strftime("%Y%m%d"))
+    fname=os.path.join(dest,fname)  # 目标文件的绝对路径
+
+    for path,folders,files in os.walk(folder):
+        for file in files:
+            key = os.path.join(path,file)      #拼出绝对路径
+            md5_dict[key] = check_md5(key)    #计算当前文件的md5值
+
+    with open(md5file,"rb") as fobj:
+        oldmd5 = pickle.load(fobj)      #取出前一天文件MD5值
+
+    with  open(md5file,"wb") as fobj:
+        pickle.dump(md5_dict,fobj)       #更新文件md5值
+
+    tar = tarfile.open(fname,"w:gz")
+    for key in  md5_dict:
+        if oldmd5.get(key) != md5_dict[key]:
+            tar.add(key)              #新文件，有变化文件进行备份
+    tar.close()
+
+if __name__ == '__main__':
+    folder = "/tmp/demo/security"
+    dest = "/tmp/demo"
+    md5file = "/tmp/demo/md5file"
+    if strftime("%a") == "Mon":
+        full_backup(folder,dest,md5file)
+    else:
+        incr_backup(folder,dest,md5file)
+___________________________________________________________________________________________________________
+                                                     OOP(面向对象编程)
+
+基本概念
+类(Class): 用来描述具有相同的属性和方法的对象的集合，它定义了该集合中每个对象所共有的属性和方法
+。对象是类的实例
+实例化：创建一个类的实例，类的具体对象 。
+方法：类中定义的函数
+对象：通过类定义的数据结构实例。对象包括两个数据成员（类变量和实例变量）和方法。
+------------------------------------------------
+                                   创建类
+·使用class 语句来创建一个新类，class之后为类的名称并以冒名结尾
+·类名建议使用驼峰形式
+class BearToy:
+    pass
+
+
+
+
+游戏人物：
+名字、职业、性别、装备、武器 、位置
+跳、走、飞、攻击
+
+OOP：面向对象的编程，实现属性和行为的融合统一
+calss Hero:
+    name = 
+    gender = 
+    def run():
+        move 
+
+________________________________________________________________________________________________________
+                                                       子类 
+OOP的更强大方面之一是能够使用一个已经定义好的类，扩展它或者对其进行修改，而不会影响系统中
+使用现存的其它代码片段
+OOD（面向对象设计）允许类特征在子孙类或子类中进行继承
+                                                 创建子类
+创建子类只需要在圆括号中写明从哪个父类继承即可 
+
+----------------------------------------------------------------
+class Vendor:
+    def __init__(self,phone):
+        self.phone = phone
+
+    def dial(self):
+        print("calling %s" % self.phone)
+
+class BearToy:
+    def __init__(self,size,color):
+        """实例化一个对象时，自动调用"""
+        self.size = size                     #bear_big.size = "Large"
+        self.color = color                 #bear_big.color = "Brown"
+        self.vendor = Vendor("400-800-1234")      #一个类是另一个类的组件   
+
+    def sing(self):
+        print("my color is %s,lalala..." % self.color)
+
+class NewBearToy(BearToy):      #子类 括号中填入的是父类、基类
+    def __init__(self,name,size,color):
+    # BearToy.__init__(self,size,color): 和下面super功能一样其中一条都可以
+        super(NewBearToy,self).__init__(size,color)
+        self.name = name 
+    
+
+if __name__ == '__main__':
+    # bear_big = BearToy("Large","Brown")            #实例化，bear_big自动作为第一个参数传递
+    # vendor=Vendor("400-800-1234")
+    # print(bear_big.vendor.phone)
+    # bear_big.vendor.dial()
+    # print(bear_big.size)
+    # print(bear_big.color)
+    # bear_big.sing()
+    bear2 =NewBearToy("Middle","Brown")
+    bear2.sing()
+__________________________________________________________________________________________________
+
+                                                 多重继承
+
+Python允许多重继承，即一个类可以是对多个父类的子类，子类可以拥有所有的父类的属性
+
+class Foo:
+    def hello(self):
+        print("hello world")
+
+class Bar:
+    def welcome(self):
+        print("how are you?")
+        
+class FooBar(Foo,Bar):
+    '子类有多个父类，它将继承所有父类的方法'
+    pass    
+        
+______________________________________________________________________________________________________
+                                                    静态方法
+·基本上就是一个函数
+·在语法上就像一个方法
+·没有访问对象和它的字段或方法
+·使用staticmethod装饰器定义
+
+
+静态实例
+
+class Book:
+    def __init__(self,title,author):
+        self.title = title
+        self.author = author
+
+    def __str__(self):
+        return "<<%s>>" % self.title
+
+    def __call__(self):
+        print("<<%s>>is written by %s. " % (self.title,self.author))
+
+if __name__ == '__main__':
+    core_py = Book("Core Python","Wesley")
+    print(core_py)        #调用 __str__方法
+    print(core_py())     #调用__call__方法
+_____________________________________________________________________________________________
+                                                        类方法
+使用classmethod 装饰器定义
+第一个参数cls 表示类本身
+
+class Date:
+    def __init__(self,year,month,day):
+        self.year = year
+        self.month = month
+        self.day = day
+
+    @classmethod
+    def create(cls,str_date):
+        "类中的方法，没有实例不能直接调用，需要将其定义为类方法"
+        year,month,day = map(int,str_date.split("-"))
+        instance = cls(year,month,day)
+        return instance
+
+    @staticmethod
+    def check_date(cls,str_date):
+        "相当于和类没有关系，只是把一个函数放到类中"
+        year,month,day=map(int,str_date.split("-"))
+        return year<4000 and 1<=month<=12 and 1<=day
+if __name__ == '__main__':
+    d1 = Date(2019,12,15)
+    print(d1.year)
+    d2 = Date.create("2020-8-1")
+    print(d2)
+
+----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

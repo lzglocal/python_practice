@@ -1,0 +1,150 @@
+----------------------------------------------------------------------
+                                             zabbix api
+
+Zabbix api概述
+• Zabbix API允许你以编程方式检索和修改Zabbix的
+配置，并提供对历史数据的访问。它广泛用于：
+– 创建新的应用程序以使用Zabbix
+– 将Zabbix与第三方软件集成
+– 自动执行常规任务
+
+
+1.访问官网的手册  https://www.zabbix.com/development_services
+
+
+--------------
+2.监控
+（1）创建主机组
+（2）创建模板
+（3）创建主机时，将其指定加入某个主机组
+（4）主机组应用模板
+
+
+--------------------
+3.zabbix api的URL
+如果zabbix页面是http://192.168.22.130/zabbix/,
+  那么它的API是     ：http://192.168.22.130/zabbix/api_jsonrpc.php
+
+
+------------------------
+4.获取zabbix版本信息 
+根据手册向API传递相应的data即可 
+网址：https://www.zabbix.com/documentation/4.0/zh/manual/api/reference/apiinfo/version
+
+import requests
+import json
+
+url = 'http://192.168.22.130/api_jsonrpc.php'
+headers = {'Content-Type':'application/json-rpc'}
+data = {
+    "jsonrpc": "2.0",  #jsonrpc 协议版本，固定
+    "method": "apiinfo.version",  #方法，在手册中查询
+    "params": [],    #参数
+    "id": 1    #随便给一个数字即可，表示作业号
+}
+
+r = requests.post(url,headers=headers,data=json.dumps(data))
+print(r.json())
+
+
+----------------------------------
+5.如果访问其他页面需要授权，所以必须获取一个token  
+
+import requests
+import json
+
+url = 'http://192.168.22.130/api_jsonrpc.php'
+headers = {'Content-Type':'application/json-rpc'}
+
+#获取用户token 
+data = {
+    "jsonrpc": "2.0",
+    "method": "user.login",
+    "params": {
+        "user": "Admin",                 #zabbix账号
+        "password": "zabbix"         #密码
+    },
+    "id": 1
+}
+
+r = requests.post(url,headers=headers,data=json.dumps(data))
+print(r.json())
+
+
+--------------------------------------------
+#获取主机组
+import requests
+import json
+
+url = 'http://192.168.22.130/api_jsonrpc.php'
+headers = {'Content-Type':'application/json-rpc'}
+
+#获取用户token 
+# data = {
+#     "jsonrpc": "2.0",
+#     "method": "user.login",
+#     "params": {
+#         "user": "Admin",
+#         "password": "zabbix"
+#     },
+#     "id": 1
+# }
+
+#获取所有的主机组
+data= {
+    "jsonrpc": "2.0",
+    "method": "hostgroup.get",
+    "params": {
+        "output": "extend",   #详细信息
+        "filter": {       #注释filter将不过滤，显示所有
+            "name": [
+                "Zabbix servers",
+                "Linux servers"
+            ]
+        }
+    },
+    "auth": "31e47cbc75e925fb43e7182859aa22ff",                   #填入获取的token 
+    "id": 1
+}
+r = requests.post(url,headers=headers,data=json.dumps(data))
+print(r.json())
+
+
+---------------------------------------------------------
+# 创建一台主机  
+data = {
+    "jsonrpc": "2.0",
+    "method": "host.create",
+    "params": {
+        "host": "Linux server",
+        "interfaces": [
+            {
+                "type": 1,
+                "main": 1,
+                "useip": 1,
+                "ip": "192.168.22.131",
+                "dns": "",
+                "port": "10050"
+            }
+        ],
+        "groups": [
+            {
+                "groupid": "2"
+            }
+        ],
+        "templates": [
+            {
+                "templateid": "10001"          #模板10001
+            }
+        ],
+        "inventory_mode": 0,    #主机资产记录
+        "inventory": {
+            "macaddress_a": "01234dsf",
+            "macaddress_b": "56768dasf"
+        }
+    },
+    "auth": "31e47cbc75e925fb43e7182859aa22ff",
+    "id": 1
+}
+
+

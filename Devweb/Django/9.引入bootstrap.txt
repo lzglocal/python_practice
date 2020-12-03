@@ -1,0 +1,159 @@
+引入  bootstrap
+
+------------------------------------------
+1.将boostrap的static 目录 ，拷贝到polls目录下  
+cd polls
+mkdir static 
+mv css js  ./static 
+
+---------------------------------
+2.修改index.html
+首行加入  {% load static %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>投票首页</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>投票首页</h1>
+    <hr>
+    {% for question in questions %}
+        <p>
+            {{ forloop.counter}}.
+        <!--    <a href="/polls/{{question.id}}/">{{question.question_text}}</a> 不推荐 -->
+            <a href="{% url "detail" question_id=question.id %}">{{question.question_text}}</a>
+            {{ question.pub_date}}
+        </p>
+    {% endfor %}
+</div>
+</body>
+</html>
+
+--------------------------------
+3.创建一个图片作为网页的 banner 
+（1）安装matplotlib   
+pip install Cycler
+pip install kiwisolver
+pip install matplotlib
+pip install numpy
+pip install pyparsing
+pip install python-dateutil
+pip install setuptools
+pip install six
+
+（2）安装wordcloud（词云）
+pip install numpy
+pip install Pillow
+pip install wordcloud 
+
+（3）生成一张1000*100的图片 
+python 
+>>> import wordcloud
+>>> w = wordcloud.WordCloud(width=1000,height=100)
+>>> with open("/etc/hosts") as fobj:
+...   w.generate(fobj.read())
+
+>>> w.to_file('/tmp/banner.png') 
+
+（4）拷贝banner.png  放到polls/static/images目录下 
+cp /tmp/banner.png   polls/static/imges 
+  修改index.html 网页 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/test.ico' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <style>
+           body {
+                   background-image:url('{% static "images/test.jpg" %}');
+                width:80%;
+           p {
+              font-size:20px;
+              font-color:black;
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/test.ico' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <style>
+           body {
+                   background-image:url('{% static "images/test.jpg" %}');
+                width:80%;
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/test.ico' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <style>
+           body {
+                   background-image:url('{% static "images/test.jpg" %}');
+                width:80%;
+           p {
+              font-size:20px;
+              font-color:black;
+           }
+           div,h1{
+             text-align:left;
+           }
+           .banner{
+                height:100px;
+                background-image:url("{% static 'images/banner.png' %}");
+                background-size:100%;
+           }
+
+           .footer{
+                height:200px;
+                line-height:200px;
+           }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="banner"></div>
+    <div>
+    <h1>投票首页</h1>
+    <hr>
+    {% for question in questions %}
+        <p>
+            {{ forloop.counter}}.
+        <!--    <a href="/polls/{{question.id}}/">{{question.question_text}}</a> 不推荐 -->
+            <a href="{% url "detail" question_id=question.id %}">{{question.question_text}}</a>
+            <!--  {{ question.pub_date}}-->
+        </p>
+    {% endfor %}
+    </div>
+    <div class="footer text-center h4" >
+       <a href="https://google.com">谷歌</a>版权&copy;copyright归lzkj
+    </div>
+</div>
+</body>
+</html
+
+（5）
+
+

@@ -1,0 +1,105 @@
+模拟浏览器行为
+------------------------------------
+urllib 简介 
+url中包括了四个模块
+-- urllib.request 可以用来发送request和获取request的结果
+--urllib.error包含了urllib.request产生的异常
+--urllib.parse用来解析和处理URL
+--urllib.robotparse用来解析页面的robot.txt文件 
+
+先需要导入用到的模块：urllib.request 
+在导入了模块之后，我们需要使用urllib.request.urlopen打开并爬取一个网页  
+读取内容常见的有三种方式：
+--read（）读取文件的全部内容，与readlines()不同的是，read()会把读取到的内容赋给一个字符串变量。
+--
+--readlines（）读取文件的全部内容，readlines（）会把读取到的内容赋值给一个列表变量
+--readline（）读取文件的一行内容
+
+例如：
+import urllib.request
+html = urllib.request.urlopen("")
+html.readline()
+html.read(4096)
+html.readlines()
+
+
+--------------------------------------------------------------------------------------------
+                                       数据编码   
+一般来说，URL标准中只会允许一部分ASCII字符，比如数字.字母.部分符号等，而其他的一些字符，比如汉字等，> 是不符合URL标
+准的，此时,我们需要编码。如果要进行编码，可以使用urllib.request.quote() 进行 
+
+urllib.request.quote("hello world")
+打印  'hello%20world%21'	  
+
+urllib.request.unquote('hello%20world%21')    
+'hello	world!'	
+
+
+
+
+--------------------------------------------------------------------------------------------
+1.观察服务器的记录行为  
+tailf  -f /var/log/httpd/access_log  
+分别用火狐和urllib进行访问，观察日志，发现有不同的记录信息   
+-----------------------------------
+2.urllib 访问时，修改头部信息
+from urllib.request import Request,urlopen
+header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36'}
+r = Request('http://127.0.0.1',headers=header)
+html = urlopen(r)
+
+观察日志的输出，发现日志记录的已经是火狐浏览器了
+
+
+vim get_resource.py   爬取163.com的图片  
+
+from urllib.request import urlopen
+import os
+import re
+
+def download(url,fname):
+    html = urlopen(url)
+    with open(fname,"wb") as fjob:
+        while True:
+            data = html.read(1024)
+            if not data:
+                break
+            fjob.write(data)
+
+def find_patt(fname,patt,code="utf8"):
+    cpatt = re.compile(patt)
+    result = []    #把所有匹配存入该列表
+    with open(fname,encoding=code) as fjob: #打开文件时，可以指定字符集
+        for line in fjob:
+            match_objs = cpatt.finditer(line)  #找到一行中的多个模式
+            for m in match_objs:
+                result.append(m.group()) #讲找到的内容追加到列表
+    return result
+
+if __name__ == '__main__':
+    net163 = "http://www.163.com"
+    file163 = "D://a.html"
+    download(net163,file163)    #下载网易首页
+    img_patt = '(http|https)://[-\w./]+(\.jpg|\.jpeg|\.png|\.gif)' #编写图片url的正则表达式
+    img_list = find_patt(file163,img_patt,"gbk")     #获取所有的图片URL
+    #print(img_list)
+    img_dir = "D:\images"
+    if not os.path.exists(img_dir):
+        os.mkdir(img_dir)
+    for img_url in img_list:
+        fname = img_url.split('/')[-1]
+        fname = os.path.join(img_dir,fname)
+        download(img_url,fname)
+
+------------------------------------------------------------------------
+
+                                             wget模块  
+#pip install wget
+
+import  wget 
+url = 'https://www.baidu.com/picture/a.jpg'
+wget.download(url,out="/tmp/a.jpg")
+
+
+
+------------------------------------------------------------------------

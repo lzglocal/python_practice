@@ -1,0 +1,348 @@
+---------------------------------------------------------------
+                                   创建表格
+定义表格  ： 使用成对的<table></table>标记
+创建表行：     使用成对的  <tr> </tr> 标记
+创建单元元格:    使用成对的 <td> </td>
+
+例：  table>tr*5>td*3             按table键 会得到以下  
+
+<table>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+给文字加表格                  <table border="10px">           10px大小的表格
+
+------------------------------------------------------------------------------
+                                    表格的常用属性   
+<tr>元素 
+ -- align        设置水平对齐方式( left | center | right )
+ -- valign       设置垂直对齐方式( top | middle | bottom )
+
+<td>元素
+ -- align        设置水平对齐方式( left | center | right )
+ -- valign       设置垂直对齐方式( top | middle | bottom )  
+-- width         设置宽度
+-- height         设置高度
+-- colspan        设置单元格跨列                          不规则表格
+-- rowspan        设置单元格跨行                          不规则表格
+
+-------------------------------------------------------------------------------------
+                                     列表   
+列表类型 ： 有序列表 <ol> 
+                   <ol type="" start="">            type 类型 ：1 数字(不写默认)   a小写字母    A大写字母 
+                           <li>..</li>                                        i 小写罗马数字      I 大写罗马数字
+                           <li>..</li>
+                    </ol>
+
+                 
+   无序列表<ul>
+                   <ul type="">                         type属性值 ：disc  实圆心     circle空圆心   square实心矩形
+                           <li>..</li>                                     
+                           <li>..</li>
+                   </ul>
+列表项：<li>  用于指示具体的列表内容  
+
+                          例1：无序列表
+<ul type="square">          无序列表开头使用square
+    <li>王老师</li>
+    <li>牛老师</li>
+    <li>丁老师</li>
+</ul>
+<ul type="circle">
+    <li>牛老师</li>
+    <li>王老师</li>
+    <li>李老师</li>
+</ul>
+<ul>
+    <li>牛老师</li>
+    <li>王老师</li>
+    <li>李老师</li>
+</ul>
+
+                                     例2：有序列表
+<ol type="I" start="３">　                 　有序从第三个开始　　
+    <li>Linux</li>
+    <li>Windows</li>
+    <li>Mac</li>
+</ol>
+<ol TYPE="a">
+    <li>Linux</li>
+    <li>Windows</li>
+    <li>Mac</li>
+</ol>
+<ol>
+    <li>Linux</li>
+    <li>Windows</li>
+    <li>Mac</li>
+</ol>
+
+                                     例3： 列表嵌套
+<ul type="none">
+    <li>
+        第一章
+        <ul type="none">       <!-- 无序列表中取消前面样式 -->
+            <li><a href="http://www.baidu.com" target="_blank">第一节</a></li>
+            <li>第二节</li>
+            <li>第三节</li>
+        </ul>
+    </li>
+    <li>
+       第二章
+       <ul type="none">
+            <li>第一节</li>
+            <li>第二节</li>
+            <li>第三节</li>
+        </ul>
+    </li>
+    <li>
+        第三章
+        <ul type="none">
+            <li>第一节</li>
+            <li>第二节</li>
+            <li>第三节</li>
+        </ul>
+    </li>
+</ul>
+——————————————————————————————————————————————
+                                                               Form表单及控件 
+表单用于显示、收集信息，并提交信息到服务器
+表单有两个基本部分： 1.实现数据交互的可见的界面元素，比如文本框或按钮
+                                 2.提交后的表单处理
+界面元素： 
+              使用 <form> 元素创建表单
+              在<from>元素中添加其他表单可以包含的控件元素
+ 
+定义表单：使用<form></from>标记
+
+<form action=""></form>      默认action 
+主要属性
+-- action  ：点击提交按钮将要跳转的网站，通常包含服务方脚本的URL(比如 JSP 、PHP）
+-- method  ：指出表单数据提交的方式，取值为get（默认）或者post 
+-- enctype ： 表单数据进行编码的方式 
+-- name  ：  表单名称  
+
+例 ： 
+<form action="https://www.google.com/search" target="_blank">
+    <input type="text" name="q">
+    <input type="submit" value="谷歌搜索">
+</form>
+-----------------------------------------
+例如：
+<form action="" >
+    <label for="">用户名:<input type="text" placeholder="用户名"></label>
+    <label for="">密码:<input type="password" placeholder="密码"></label>
+    <input type="submit"  value="登 录" >
+    <input type="reset">
+</form>
+
+
+表单控件：表单控件元素包含在表单元素中中具有可视化的HTML 元素
+表单控件元素有：
+-- input 文本输入控件、按钮、单选和复选按钮、选项框、文件选择和隐藏控件等
+-- textarea  
+-- select 和 option 元素 
+
+
+-----------------------------------------------------------------------------------
+                                               <input> 元素
+<input> 元素用于收集用户信息
+属性
+- - type 根据不同的type属性值，可以创建各种类型的输入字段，不如文本框，复选框等 
+-- value ：控件的数据
+-- name ： 控件的名称
+-- disabled： 禁用控件  
+                                              按钮 
+提交按钮 ： <input type="submit" >   : 传送表单数据给服务器端或其它程序处理
+重置按钮： <input type ="reset">       : 清空表单的内容并把所有表单控件设置为最初的默认值
+普通按钮  <input type="button">    : 用于执行客户端脚本     ---一般用于js脚本
+   例如：
+    <head>
+    <meta charset="UTF-8">
+    <title>my form</title>
+    
+<script>
+    function say_hi(){
+        alert("您好！")
+    }
+    </script>
+</head>
+
+<body>
+<div align="middle"><input align="middle" type="button" value="欢迎" onclick="say_hi()"></div>      //运行脚本 
+
+主要属性 ：name 名称   value按钮的标题文本
+
+
+                                              文本框与密码框
+文本框： <input type = "text">
+密码框： <input type = "password">
+属性：
+        -- name  名称
+       --  value    由访问者自由输入的任何文本
+      -- maxlength  限制输入的字符数
+      -- readonly  设置文本控件只读
+
+例：<input type="submit"  value="登 录" >  
+----------------------------------
+<form action="https://www.google.com/search" target="_blank">
+    <input type="text" name="q">
+    <input type="submit" value="谷歌搜索">
+</form>
+<hr>
+
+<form action="https://www.sogou.com/web" target="_blank">
+    <input type="text" name="query">
+    <input type="submit" value="搜狗搜索" >
+</form>
+<hr>
+
+<form action="http://www.baidu.com/s" target="_blank">
+    <input type="text"name="wd">
+    <input type="submit" value="百度搜索">
+</form>
+-----------------------------------------------------------------
+                                               单选框和复选框
+单选框   ：<input type= "radio">        
+复选款   ： <input type= "checkbox">
+主要属性
+-- name 设置名称，并用于分组，一组单选框或复选框的名称必须相同（比如单选题name都一样）
+-- value 文本，当提交form时，如果选中了此单选按钮，那么value被发送到服务器
+-- checked  设置默认被选中  
+
+例如：单选框
+<form action="">
+    2.你喜欢的电影是什么？<br>
+    <label><input type="radio" name="2">天龙八部</label>     //设置name全为相同可以作为单选题
+    <label><input type="radio" name="2">神雕侠女</label>
+    <label><input type="radio" name="2">地道战</label>
+</form>
+
+例如： 禁用或者选项
+
+<form action="https://www.google.com/search" target="_blank">
+    1.你喜欢的课程是什么？<br>
+    <label><input type="radio" name="q" value="Linux">Linux</label>
+    <label><input type="radio" name="q" value="DB" disabled>DB</label>
+    <input type="radio" id="python" name="q" value="Python"><label for="python">Python</label>
+    <input type="submit" value="查询">
+</form>
+
+
+例如： 复选框
+<form action="">
+    你喜欢的课程是什么？<br>
+    <input type="checkbox"><label for="">Linux</label>    //只能单选点CheckBox才可以勾上 
+    <label><input type="checkbox">DB</label>                       //可以点文字和checkbox都可以勾上  
+    <input type="checkbox" id="py"><label for="py">Python</label>   //可以点文字和checkbox都可以勾上  
+</form>
+
+------------------------------------------------------------------------
+                                                         隐藏域和文件选择框
+隐藏域：<input type="hidden">                           // 隐藏信息 以免跨站攻击  
+           -- 在表单中包含不希望用户看见的信息
+         -- name属性： 名称
+      -- value 属性 ： 值  
+ 文件选择框 ：<input type="file">
+-- name 属性：名称  
+
+
+
+例 :<form action="" method="post">
+<input type="file">
+<input type="submit">
+</form>
+
+________________________________________________________________________________________________________________________
+                                                      其他控件       
+
+                                                   <label>元素
+
+语法： <label>文本</label> 
+主要属性 ：   for   表示与该元素相关联的控件的ID值 
+  for  作用： 将文本与控件联系在一起后，单击文本，效果就同单击控件一样
+
+例   ： <input type="checkbox" id="py">
+           <label for="py">Python</label>
+
+例2   <input type="checkbox" name="chkHid" id="chkHid">
+        <label for="chkHid"> 不要公开我的信息</label>
+
+
+-------------------------------------------------------------------------------------
+                                                        选项框
+ 两种： 下拉选项框、  滚动列表 
+ <select>    ：创建选项框
+  -- name  ：选项框命名
+ -- size   ： 大于1，则为滚动列表  
+ -- multiple ：设置多选 
+<option>  ：选项
+-- value ：选项的值
+-- selected ：预选中 
+
+例 ：下拉变滚动  
+
+<form action="https://www.google.com/search" target="_blank">
+    <select name="q">            //这里可以设置滚动条  size   <select name="q" size="2">  
+        <option value="linux">linux</option>
+        <option value="windows">windows</option>
+        <option value="mac">mac</option>
+    </select>
+    <input type="submit">
+</form>
+
+---------------------------------------------------------------------------------------------
+                                                       <textarea>元素
+多行文本输入  
+ -- <textarea> 文本 </textarea>
+主要属性 ：
+   --name  ：名称
+ -- cols    ： 指定文本区的列数
+-- rows  ：  指定文本区的行数
+-- readonly  ： 只读
+
+例： 
+<form action="">
+    <textarea name="query"  cols="40" rows="5" placeholder="文本"></textarea>
+    <input type="submit">
+</form>
+
+---------------------------------------------------------------------------------------------------
+                                       <pre></pre>  可以定义输入格式
+                                       <code></code>
+
+
+ 
+
+
+
+
+                                                            
+
+
+
+
+  

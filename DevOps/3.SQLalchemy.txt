@@ -1,0 +1,86 @@
+安装 sqlalchemy  
+pip  install  sqlalchemy   
+
+------------------------------------------
+1.数据库创建库名，
+create database sqlalchemy default charset utf8；
+2.通过SQL alchemy 创建表
+
+
+from sqlalchemy import create_engine,Column,Integer,String,ForeignKey,Date
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine(#创建到mysql的引擎
+    'mysql+pymysql://test:123qqq...A@192.168.22.131/sqlalchemy?charset=utf8',
+    encoding = 'utf8',  #编码
+    echo = True  #在终端打印日志，生产环境要设置为False
+ )
+Session = sessionmaker(bind=engine)
+Base = declarative_base()
+
+class Departments(Base):
+    __tablename__ = 'departments'
+    dep_id = Column(Integer,primary_key=True)
+    dep_name = Column(String(20),unique = True,nullable =False)
+
+    def __str__(self):
+        return "部门：%s" % self.dep_name
+class Employees(Base):
+    __tablename__ ='employees'
+    emp_id= Column(Integer,primary_key=True)
+    emp_name = Column(String(20))
+    gender =Column(String(6))
+    email = Column(String(50))
+    phone = Column(String(11))
+    dep_id = Column(Integer,ForeignKey("departments.dep_id"))
+
+    def __str__(self):
+        return "员工: %s" % self.emp_name
+
+class Salary(Base):
+    __tablename__ ='salary'
+    auto_id = Column(Integer,primary_key=True)
+    date = Column(Date)
+    emp_id = Column(Integer,ForeignKey('employees.emp_id'))
+    basic = Column(Integer)
+    awards = Column(Integer)
+
+    def __str__(self):
+        return '工资: %s:%s=>%s' %(self.date,self.emp_id,(self.basic+self.awards))
+
+
+if __name__ == '__main__':
+    Base.metadata.create_all(engine)
+
+
+ ----------------------------------------------------------------------------------------
+导入dbconn.py ，写入内容 ，创建 ——部门
+
+from dbconn import Departments,Session
+
+hr = Departments(dep_id =1,dep_name='hr')
+op= Departments(dep_id=2,dep_name="运维部")
+develop=Departments(dep_id=3,dep_name="开发部")
+devops = Departments(dep_id=4,dep_name='运维开发')
+qa=Departments(dep_id=5,dep_name="测试")
+session = Session()
+#session.add(hr)  #单个添加
+session.add([op,devops,develop,qa])
+session.commit()
+session.close()
+
+
+-----------------------------------------------------------------------------------------------
+导入dbconn.py ,创建——员工
+
+gw = (10,"Tom","male","tom@123.com","12999888943",3)
+jay = (11,"Jay","male","Jay@ladaza.com","9974745745",2)
+jeff = (13,"Jeff","male","tom@google.com","12999888943",3)
+lisa = (14,"Lisa","female","lisa@baidu.com","8888888888",6)
+bs = (15,"bs","male","bs@123.com","129998843",3)
+alon = (16,"alon","male","alon@123.com","129998843",2)
+Jill = (17,"Jill","male","jill@123.com","1288988893",2)
+charles= (18,"charles","male","charles@123.com","129888943",2)
+ws =(19,"王顺","male","ws@123.com","1299988943",3)
+jemp =(34,"emp","male","jemp@123.com","188288893",3)

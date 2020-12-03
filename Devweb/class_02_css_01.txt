@@ -1,0 +1,243 @@
+                                                    -------------------          
+                                                        C S S
+css 是层叠样式表，又叫级联样式表，简称样式表 
+css与html之间的关系：1、css用于构建html元素的样式
+                                  2. html是页面的内容组成，css是页面的表现
+html属性与css样式取代html属性  
+  -- 实现内容和表现的分离 
+
+使用css样式的方式  ：
+                                 内联方式 
+                                 内部样式表
+                                外部样式表  
+
+  h1     {  text-align:center；color：red }   
+
+h1         ：     选择器 
+text-align ：    样式声明-属性
+center    :       值
+
+--------------------------------------------------------------
+                                 内联方式使用CSS
+---样式定义在单个的HTML元素中
+只需要将分号隔开的一个或者多个属性/值对作为元素的 style 属性的值
+属性与属性值之间用   ： 连接
+多对属性之间用     ；  隔开
+例如 ： <h1  style="background-color:silver;color:blue;"> 文本 </h1>
+            
+
+
+---------------------------------------------------------------
+                                  内部样式表
+  -- 样式定义在html页的头元素中  <style>元素内
+在<style>元素中添加样式规则
+可以定义多个样式规则 每个样式规则由两部分 ： 选择器和样式声明
+                       选择器：决定哪些元素使用这些规则
+                      样式声明：一对大括号，包含一个或者对个属性/值对
+
+例如 ：
+<html>
+      <head>
+                   <style type="text/css">    
+                                h1                                     -----选择器
+                        { 
+                            background-color:silver;
+                           color:bule;                          ---样式声明
+                         }   
+                    </style>
+       </head>
+
+<body>
+         <h1>文本1</h1>
+          <h1>文本2</h1>
+ </body>
+</html>
+
+----------------------------------------------------------------
+                                   外部样式表
+-- 将样式定义在一个外部的CSS文件中（.css文件）由html页面引用表文件
+--样式规则由选择器和样式声明组成  
+使用该样式文件的页面上<head>中，使用<link>元素链接外部样式表文件
+
+第一步：创建.CSS文件 
+例如 ：
+  h1                                        
+{
+       color：green；            
+}
+  p
+{
+      background-color:silver;
+      color:blue 
+}
+
+第二步：
+在文档的|<head> 元素内添加<link>元素
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>mycss1</title>
+    <link rel="stylesheet" type="text/css" href="myStyle.css">      ----链接外部文件   
+</head>
+
+<body>
+<h1>1号标题</h1>
+<p>段落</p>
+<span>其他文本</span>
+</body>
+
+</html>
+
+
+-----------------------------------------------------------------------------------------
+                                                  CSS基础选择器
+                                                     通用选择器
+通用选择器，显示为一个星号 (*)
+可以与任何元素匹配，用于设置默认样式，比如整个文档文本的默认字体和大小  
+*
+{ 
+   font-size：9pt；
+   font-family:"Times New Roman";
+}
+
+---------------------------------------------------------
+                                                     元素选择器
+html文档的元素就是选择器
+--比如<p>、<h1>等
+
+  html
+{
+      color:black;
+}
+  h1 
+{
+         color:blue;
+}
+  h2
+{
+           color:silver;
+}
+
+-----------------------------------------------------------------
+                                                      类选择器
+语法为：.className{color:red}
+如：.myclass{background-color:green;color:red}
+类名称不能以数字开头
+例如：
+  .myClass
+{
+       background-color:Pink;
+       font-size:35pt;
+}
+
+在html文本中：将元素的class属性的值设置为样式类的名称
+
+<h2 class="myClass">h2文本</h2>
+<p class="myClass">段落文本</p>
+
+--------------------------------
+多类选择器
+可以将对个类选择器应用于同一个元素（多类选择器）
+--html元素的class 属性的值中可能包含一个词列表
+-- 各个词之间用   空格   分隔，每个词都是一个类选择器
+
+样式表中：声明两个样式类
+.important {
+     font-weight:bold;         加粗
+}
+.warning {
+      color:red;
+}
+
+html文档中：将元素的class属性的值设置为多个样式类名的列表   
+<p class="warning">警告</p>           
+<p class="important">重要</p> 
+<p class="important warning">哈哈</p>         ---（空格   分隔，）
+
+------------------------
+
+样式表中 ：定义一个分类选择器 
+p.important
+{
+      color:red;
+      font-size:20pt
+      border:1px solid black;
+}
+
+html文档中：将元素的class 属性的值设置为样式类的名称  
+
+<h2 class="important">h2文本</h2>
+<p class="important">段落文本</p>          --- 只有<p>元素使用样式  
+
+------------------------------------------------------------------------------------
+
+                                                     id选择器
+选择器前面需要有一个  #  号
+选择器本身则为文档中某个元素的id属性值    
+
+样式表中：定义一个id选择器   
+#mostImportant 
+{
+   color：red；
+   background：yellow；
+}
+
+html文档中：将元素的id属性的值设置为选择器的名称  
+<h1 id="#mostImportant">This is important</h1>
+<h1>This is important</h>
+
+--------------------------------------------------------------------------------------
+                                           
+                                                      群组选择器
+选择器声明为以逗号隔开的选择器列表
+---将一些相同的规则作用于多个元素  
+
+样式表中：定义选择器分组   
+h2,p.important                   -------h2和p.important 一起定义
+{
+       color:green;
+       font-size:20pt
+       border:1px solid red;
+}
+
+html文档中;
+<p class="important">p text </p>
+<h2>h2 text</h2> 
+
+------------------------------------------------------------------------------------------------
+
+                                                      伪类选择器
+伪类用于向某些选择器添加特殊的效果
+使用冒号 ：作为结合符，结合符  --左边是其他选择器  ，右边是伪类
+格式：   选择器 : 伪类选择器  
+
+链接伪类 ：  
+                  ：link                    适用于尚未访问的链接
+                  ：visited              适用于访问过的链接
+
+ 动态伪类，用于呈现用户操作
+                   :    hover               适用于鼠标悬停在html元素时
+                  ：   active             适用于html元素被激活时
+                   ：  focus               适用于html元素获取焦点时
+
+样式表中：定义伪类选择器   
+
+a:link     {
+                  color:black;
+                   font-size:15pt;
+}
+a:visited {
+           color:pink；
+          font-size:15pt；
+}
+a:hover{
+                   font-size:20pt；
+}
+a:active {
+         color:red
+}
+
+

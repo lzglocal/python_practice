@@ -1,0 +1,344 @@
+序列类型操作符
+--------------------
+seq[ind]               获取下标为ind的元素 a = ["h","e","l","l","o"]   a[3] = l
+seq[ind1:ind2]      获取下标从ind1到ind2间的元素集合 a = ["h","e","l","l","o"]  a[2:4] = ["l","l"]
+seq*expr             序列重复expr次   print("#"*5)  得到  #####
+seq1+seq2         连接序列seq1和seq2   拼接（同类型）  "abc"+"123"    或者
+例："abc" +[10,20]  不可以不同类型   修改为 ["abc"] +[10,20]
+obj in seq          判断obj元素是否包含在seq中
+obj not in seq    判断obj元素是否不包含在seq中
+
+
+内建函数(工厂函数)
+------------------
+list(iter)             把可迭代对象转换为列表
+str(obj)               把obj对象转换成字符串
+tuple(iter)           把一个可迭代对象转换成一个元组对象  
+len(seq)               返回seq的长度
+max(iter,key=None)  返回iter中的最大值
+enumerate     (枚举)             接受一个可迭代对象作为参数，返回一个enumerate对象 返回是元组
+reversed(seq) （翻转）  接受一个序列作为参数，返回一个以逆序访问的迭代器
+sorted(iter)      （排序） 接受一个可迭代对象作为参数，返回一个有序的列表
+ 
+------------------------------------------
+list(10)          #无法装列表。数字无法转
+ list("hello")    #列表
+得到 ["h","e","l","l","o"]
+
+list(("hello","world"))
+["hello","world"]
+------------------------------------------
+str(obj)           #字符串
+str(10)
+"10"
+------------------------------------------
+tuple(iter)       #元组
+tuple(abc) 
+("a","b","c")
+------------------------------------------
+a = "hello"
+len(a)  得到5 
+------------------------------------------
+names = ["bob","alice","tom"]
+max(name)    得到tom   按第一个字母排序
+min(names)    得到alice 
+------------------------------------------
+hi = "hello"
+alist = [10,20,30]
+
+for ind in range(len(hi)):
+    print(ind,hi[ind])
+
+for item in enumerate(alist):
+    print(item)
+
+for ind,val in enumerate(alist):
+    print(ind,val)
+------------------------------------------
+print(list(reversed(alist)))        #翻转
+for i in reversed(alist)
+     print(i)
+
+print(sorted(alist))                 #排序
+
+
+
+--------------------------------------------
+字符串操作符
+比较操作符：字符串大小按 ASCII码值大小进行比较
+切片操作符：[]、[:] 、[::]
+成员关系操作：in 、not in 
+
+
+———————————————————————————————————————————
+检查标识符
+
+1.程序接受用户输入
+2.判断用户输入的标识符是否合法
+3.用户输入的标识符不能使用关键字
+4.有不合法字符，需要指明第几个字符不合法
+
+import keyword
+import string
+
+first_chs = string.ascii_letters+"_"
+other_chs = first_chs+string.digits
+def check_id(idt):
+    if keyword.iskeyword(idt):
+        return "%s是关键字" %idt
+
+    if idt[0] not in first_chs:
+        return "首字符不合法"
+
+    for ind,ch in enumerate(idt[1:]):
+        if ch not in other_chs:
+            return "第%s个字符不合法" %(ind+2)
+    return "%s是合法的标识符" %idt
+
+if __name__ == '__main__':
+    idt = input("请输入字符串:")
+    print(check_id(idt))
+
+_____________________________________________________________________________________
+
+字符串格式化
+%c 
+%s                  #优先用str()函数进行字符串转换
+%d /%i           #转成有符号十进制数
+%#o                #转成无符号八进制数
+%#x                #转成无符号十六进制数
+%e /%E         #转成科学计数法
+%f /%F          #转成浮点数
+%10s%10s     #填充格式
+%-10s%-10s    #左对齐
+
+
+"" %()
+print("%s" % a)
+
+"%s: %s" % ("bob",22)      #%s  / %d   常用
+"%s: %d" % ("bob",22)
+"97 is %c" % 97              #  %c转换数字成为对应的ASCII码，
+"97 is %#o" % 97             #不常用
+"97 is %#x" % 97               #不常用
+"10000 is %e "  %10000         #不常用
+"10/3 is %f"  %(10/3)                #不常用
+
+"%10s%10s" % ("name","age")    #常用，定义字段宽度为10个字节
+"%-10s%-10s"  % ("name","age")   #常用，左对齐
+------------------------------------------------------------------------
+           format函数 （功能和上面%字符串格式化一样）
+使用位置参数 
+-  "my name is{},age{}" .format("hoho",18)
+使用关键字参数
+- "my name is {name},age is {age}" .format({"name":"bob","age":23})
+填充与格式化
+-{:[填充字符][对齐方式<^>][宽度]}
+使用索引
+- "name is {0[0]} age is {0[1]}" .format(["bob",23])
+
+"{}: {}" .format("bob",22)
+"bob: 22"
+
+"{1}: {0}" .format("bob",22)
+"bob: 22"
+
+"{0[1]}: {0[0]}" .format([22,"bob"])
+----------------------------------------------------------------------------
+       创建用户（Linux系统运行）
+1.编写一个程序，实现创建用户的功能
+2.提示用户输入
+3.随机生成8位密码
+4.创建用户并设置密码
+5.将用户相关信息写入指定文件
+
+import sys
+import subprocess    
+#import randpass
+import random
+import string
+all_chs = string.ascii_letters+string.digits
+def adduser(username,password,fname):
+    info = """用户信息：
+用户名：%s
+密码：%s
+""" %(username,password)
+    subprocess.call("useradd %s" % username,shell=True)
+    subprocess.call(
+        "echo %s |passwd --stdin %s" %(password,username),shell=True
+    )
+    with open(fname,"a") as fobj:
+        fobj.write(info)
+
+def randpass(n=8):  #创建随机8位密码
+    result=""
+
+    for i in range(n):
+        ch=random.choice(all_chs)
+        result+=ch
+    return result
+
+
+if __name__ == '__main__':
+    password = randpass()
+    fname = "/tmp/mima.txt"
+    adduser(sys.argv[1],password,fname)
+----------------------------------------------------------------------------------------
+       原始字符串操作符
+
+.原始字符串操作符是为了对付那些在字符串中出现的特殊字符
+.在原始字符串里，所有的字符都是直接按照字面的意思来使用，没有转义特殊或不能打印的字符
+
+例：
+   winPath = "c:\windows\new\temp" 
+    print(winPath)                # \t 成为tab   \n成为回车
+c:\windows
+ew	emp
+
+   newPath = r"c:\windows\temp"     #  r表示真实字符串`原始字符串 
+   print(newPath)                       
+c:\windows\temp 
+
+   newPath      #看到Python是如何存储的 其实 r 是加多\ 
+c:\\windows\\temp    
+  
+——————————————————————————————————————
+       字符串内建函数   (字符串操作)
+string.capitalize():   # 把字符串的第一个字符大写  
+string.center(width)  #返回一个原子符串居中，并使用空格填充至长度width 的新字符串
+string.count(str,beg=0,end=len(string))  #返回str在string里面出现的次数，如果beg或
+                                                               者end指定则返回指定范围内str出现的次数
+string.upper()                 #字符串变大写
+string.strip()                   #删除两端空白字符，
+string.lstrip()                   #删除左边空白字符                            
+string.rstrip()                   #删除右边空白字符    
+string.lower()                        #字符串变小写
+string.startswith("he")           #是以he开头吗
+string.endswith("abc")           #是以abc结尾吗
+string.replace("l","m")           #  l 替换为m
+string.ljust(50,"*")                 #  宽度为50，左边对齐，空格补充为*
+string.rjust(50,"*")                #宽度为50，右边对齐，空格补充为*
+string.isdigit()                      #判断字符串是不是全部数字
+string.islower()                     #判断是否全部小写
+string.isupper()
+string.isidentifier()               #判断是否符合合法标识符
+
+--------------------------
+字符串方法
+"     hello world    ".strip()       #删除两端空白字符
+
+hi = "hello world"
+hi.upper()                      #字符串变大写
+hi.lower()                       #字符串变小写                           
+hi.startswith("h")           #以h开头吗？
+hi.startswith("he")      
+hi.endswith("abc")         #以abc结尾吗？
+hi.replace("l","m")         #替换
+hi.center(50)                #居中
+hi.center(50,"*")
+hi.ljust(50,"*")
+hi.rjust(50,"*")
+"1234".isdigit()                 #判断是否是数字
+True
+"hao123".isdigit()
+False
+"hao123".islower()      #是否小写
+————————————————————————————————————————————
+        创建及访问列表（列表list操作）
+·列表是有序、可变的数据类型
+·列表中可以包含不同类型的对象
+·列表可以由 [ ] 或工厂函数创建
+·支持下标及切片操作
+
+列表内建函数
+        列表方法                           操作
+list.append(obj)             向列表中添加一个对象
+list.count(obj)                返回一个对象obj在列表中出现的次数
+list.extend(seq)               把序号seq的内容添加到列表中
+list.index(obj)                 返回obj对象的下标
+list.insert(index,obj)        在索引量为index的位置插入对象obj
+list.reverse()                    原地翻转列表
+
+
+alist = [10,20,30,"bob","alice"]
+alist.remove("bob")                          #删除第一个bob
+alist.append("25")                             #添加一个对象
+alist.sort()                                        #排序升序
+alist.reverse()                                   #翻转
+alist.pop()                                       #默认删除最后一项   
+alist.pop(1)                                     #弹出
+alist.insert(1,50)                               #在下标为1的位置插入50
+alist.extend([200,10,39])                    #扩展列表
+alist.extend("abc")                            #会把abc 分开加到列表
+alist.append("abc")                            #注意和extend的区别
+alist.index(50)                                   #获取50的下标，没有50这个元素则报错
+
+————————————————————————————————————————
+
+
+atuple = (10,20,30,[1,2,3])
+atuple.count(20)                  #统计有多少个20 
+atuple.index(20)                   #第一个20的下标
+atuple[-1].append(4)            #理解即可，很少有应用
+
+ 单元素元组必须有逗号，否则不表示元组
+例：a= (10)
+ len(a)               #报错
+ type（a）        #整数
+
+a =(10,)   #元组必须有逗号  
+len (a)
+1        
+type(a)                         
+
+_________________________________________________________________________________________________
+                        用列表构建栈结构
+1.栈是一个后进先出的结构
+2.编写一个程序，用列表实现栈结构
+3.需要支持压线、出栈、查询功能
+
+
+stack = []                    #全局变量从定义开始一直到程序结束，任何地方都可见、可用
+def push_it():
+    item = input("数据").strip()
+    if item:
+        stack.append(item)
+
+def pop_it():
+    if stack:
+        print("从栈中弹出了%s" % stack.pop())
+    else:
+        print("\033[32;1m空栈\033[0m")
+
+def view_it():
+    print("\033[31;1m%s\033[0m" % stack)
+
+def show_menu():
+    cmds = {"0": push_it,"1":pop_it,"2":view_it}
+    prompt = """(0)压栈
+(1)出栈
+(2)查询
+(3)退出
+请选择(0/1/2/3)"""
+    while True:
+        choice = input(prompt).strip()[0]
+        if choice not in "0123":
+            print("无效输入，请重试")
+            continue
+        if choice == "3":
+            print("Bye-bye")
+            break
+        cmds[choice]()
+
+if __name__ == '__main__':
+    show_menu()
+
+_______________________________________________________________________________________
+
+
+
+
+
+
+
+

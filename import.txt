@@ -1,0 +1,55 @@
+print
+input
+import
+len
+if 
+list //转为列表
+elif
+else
+and 
+not is
+or
+while
+for  
+import getpass
+import random
+break 
+continue
+random
+random.readint(1,10)
+random.choice[[],[]]
+range()
+read 
+readline
+readlines
+write
+writelines
+with     as
+as 
+def
+return
+string 
+string.ascii_letters+string.digits          //大小写字母加数字
+all_chs = string.ascii_letters+string.digits
+shutil 
+partial
+functools
+time
+strftime 
+datetime
+function 
+del 
+class 
+public 
+range 
+re
+search
+pattern
+compile 
+match
+search 
+findall 
+finditer 
+split 
+sub 
+subn 

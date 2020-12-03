@@ -1,0 +1,77 @@
+1.安装python3
+yum -y install python3 
+
+使用python虚拟环境
+python3 -m venv  /opt/lzkj
+source /opt/lzkj/bin/activate      //进入python虚拟环境  
+deactivate       //退出虚拟环境
+
+
+2.安装django
+source /opt/lzkj/bin/activate
+pip install Django    
+安装包 插件包 
+pip install pycparser
+pip install asn1crypto
+pip install cffi
+pip install cryptography
+pip install idna
+pip install PyMySQL
+pip install pytz
+pip install six  
+
+安装可视化包，以后要用 （一般都有安装了，只是更新）
+pip install Cycler
+pip install kiwisolver
+pip install matplotlib
+pip install numpy
+pip install pyparsing
+pip install python-dateutil
+pip install setuptools
+pip install six
+pip install numpy
+pip install Pillow
+pip install wordcloud 
+pip install sqlalchemy
+
+python -m django --version 
+
+
+3.检测是否安装成功
+python3  
+
+>>>import 
+>>> django.get_version( ）  //或django.__version__
+
+
+4.创建项目
+django-admin startproject  /home/lzkj    
+cd /home/lzkj
+
+[root@test lzkj]# tree
+.
+├── manage.py            //管理 Django 项目的命令行工具 用于管理（创建APP，创建数据库、管理员）
+└── lzkj                           // 目录包含你的项目
+    ├── asgi.py                       //  作为你的项目的运行在 ASGI 兼容的Web服务器上的入口
+    ├── __init__.py       //一个空文件，告诉 Python 这个目录应该被认为是一个 Python 包
+    ├── settings.py          //Django 项目的配置文件
+    ├── urls.py                   //路由系统URLConfig 、程序入口
+    └── wsgi.py                      //作为你的项目的运行在 WSGI 用于部署项目到Web服务器 
+
+Django默认只允许本机访问、英文环境，这些均可在setting.py中进行修改
+ALLOWED_HOST = "*"     //允许所有IP登录
+
+LANGUAGE_CODE = 'zh-Hans'      //设置为中文
+TIME_ZONE = 'Asia/Shanghai'    //设置为亚洲上海 
+
+
+
+5.简易服务器测试是否成功
+python manage.py runserver       //默认端口 8000  可更改
+
+想要向网络上的其它电脑展示你的成果时），使用：
+python manage.py runserver 0:8000    //0 是 0.0.0.0 的简写 
+
+
+
+

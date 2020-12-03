@@ -1,0 +1,63 @@
+with
+文件操作可以使用with语句，with语句结束时，文件自动关闭 
+
+whit open("/tmp/zhuji") as f:                     #相当于 f = open("/tmp/zhuji")
+ ...      line  = f.readline()   
+line                                                #文件第一行
+f.readline()                               #出错，因为文件已经关闭
+
+逐行处理文本文件，更常用的方法是for循环
+>>> with open("/tmp/zhuji")  as f:
+...   for line in f:    
+...       print(line,end=" ")           
+
+________________________________________________________________________________________________________
+
+模拟cp操作
+1.创建cp.py 文件
+2.将/bin/ls 拷贝 到/root/目录下
+3.不要修改原始文件  
+
+src_fname = "/bin/ls"
+dst_fname = "/tmp/list"
+
+src_fobj = open(src_fname,"rb")
+dst_fobj = open(dst_fname,"wb")
+
+while True:
+    data = src_fobj.read(4096)
+    if not data:                 #读不到数据，意味着已经读完了
+        break
+    dst_fobj.write(data)     #读到数据，则写入目标文件
+src_fobj.close()
+dst_fobj.close()
+
+ 或者
+src_fname = "/bin/ls"
+dst_fname = "/tmp/list"
+
+with open(src_fname,"rb") as src_fobj:
+    with open(dst_fname,"wb") as dst_fobj:
+        while True:
+            data = src_fobj.read(4096)
+            if not data:
+                 break
+            dst_fobj.write(data)
+
+--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

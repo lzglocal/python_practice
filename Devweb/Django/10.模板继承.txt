@@ -1,0 +1,102 @@
+模板继承：为了使得多个页面保持统一的风格，并且不需要每个页面重新相同的工作
+可以使用模板继承，模板继承可以先创建一个基础页面，将相同的内容写到基础页面；
+其他页面继承模板，就具有和模板一样的内容，再把个性化的内容补全发  
+
+1. 将index.html 复制一份，取名为base.html  
+2.修改base.html 页面。将个性化信息用  block  代替   
+vim polls/templates/base.html
+
+{%  load static %}
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>              <!-- //这里有修改-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/test.ico' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+    <style>
+           body {  background-image:url('{% static "images/test.jpg" %}');width:80%;height:40%;	}													       background-size:cover;													}
+           p {   font-size:20px; font-color:black;}
+	   div,h1{ text-align:left;}
+	   .banner{ height:100px;background-image:url("{% static 'images/banner.png' %}");background-size:100%;}
+	   .footer{ height:200px;line-height:200px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="banner"></div>
+    <div class="main">  {% block content %}{% endblock %}            <!--  这里代替所有的文本内容--> 
+    </div>
+     <div class="footer text-center h4" >
+    <a href="https://google.com" target="_blank">谷歌</a>版权&copy;copyright
+    </div>
+
+3. 修改index.html,将模板中已存在的内容删除，个性化的内容放到block 中 
+vim polls/templates/index.html 
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}投票首页{% endblock %}
+{% block content %}
+    <h1>投票首页</h1>
+    <hr>
+    {% for question in questions %}
+        <p>
+            {{ forloop.counter}}.
+        <!--    <a href="/polls/{{question.id}}/">{{question.question_text}}</a> 不推荐 -->
+            <a href="{% url "detail" question_id=question.id %}">{{question.question_text}}</a>
+            <!--  {{ question.pub_date}}-->
+        </p>
+    {% endfor %}
+{% endblock %}
+
+4.修改 detail.html 
+vim polls/templates/detail.html 
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}投票详情{% endblock %}
+
+{% block content %}
+<hr>
+<h2>{{ question.question_text }}</h2>
+
+<form action="{% url 'vote' question_id=question.id %} " method="post">
+    {% for choice in question.choice_set.all %}
+    <div class="radio">
+        <label>        <input class='radio' type="radio" name="choice_id" value="{{ choice.id }}">
+        {{ choice.choice_text}}        </label>
+    </div>
+    {% endfor %}
+    <input class="btn btn-primary" type="submit" value="投票">
+</form>
+{% endblock %}
+
+
+5.修改投票结果result.html 
+vim polls/templates/result.html 
+
+{% extends 'base.html'%}
+{% load static %}
+{% block title %}投票结果{% endblock %}
+{% block content %}
+<h1>投票结果</h1>
+<hr>
+<h2>{{ question.question_text }}</h2>
+
+<table class='table table-bordered table-striped table-hover'>
+    {% for choice in question.choice_set.all %}
+        {% if forloop.counter|divisibleby:2 %}
+            <tr class='warning'>
+        {% else %}
+            <tr class='danger'>
+        {% endif %}
+    <tr>
+        <td>{{ choice.choice_text }}</td>
+        <td>{{ choice.votes }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+	    

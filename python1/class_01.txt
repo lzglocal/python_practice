@@ -1,0 +1,118 @@
+INSTALL PYTHONE3 
+
+安装依赖包
+yum  -y install gcc gcc-c++  zlib-devel openssl-devel readline-devel libffi-devel sqlite-devel tcl-devel tk-devel  
+
+
+wget https://www.python.org/ftp/python/3.6.4/Python-3.6.4.tgz
+tar zxf Python-3.6.4.tgz 
+cd Python-3.6.4 
+./configure --prefix=/usr/local  
+make&&make install 
+
+
+安装  Pycharm 
+Pycharm 设置中文
+1.baidu.com search  Pycharm2017.3 汉化包
+2.下载resource_cn.jar  
+3.把resource_cn.jar 拷贝到/root/bin/pycharm2017/lib中
+4.如果经过第三步，仍然是英文界面，可以将lib目录中的resource_en.jar先剪切到别处
+5.启动Pycharm，将报错
+6.关闭pycharm后，把resource_en.jar再拷贝进去
+
+--------------------------------------------------------------------------------------------------------------------------
+Pycharm使用
+加注释  ： 选择行数 crtl +？    去掉注释：crtl+？
+;    允许同一行但不推荐
+
+
+-------------------------------------------------------------------------------------------------------------------------
+Python syntax
+例如;   
+a=3
+b=4      推荐 这种写法
+
+a=3;b=4   不推荐，可读性差  
+Python中 “字符串”  必须有引号，单双引号表示相同的含义，
+如果不加引号，Python会把它当成一个名称，如果该名称没有定义将会报错
+
+print('hello world')               #语句各项之间默认用空格分隔
+print('hello','world')                
+print('hello','world',sep='***')  #语句各项之间也可以自定义分隔符
+print('hello'+'world')                #字符串可以使用+进行拼接 
+print('hello world',end='AAA')  #print语句默认最后加入一个回车\n，可以用end来自定义结束
+
+username = input('请输入用户名：')
+print('欢迎登录',username)
+# print('欢迎登录'+ username)
+
+合法的变量名，有三个要求
+1.首字符必须是字母或下划线
+2.其他字符可以是字母、数字或下划线
+3.区分大小写
+推荐采用的全名方法
+-变量名全部采用小写字母
+-简短、有意义
+-多个单词间用下划线分隔
+-变量名用名词，函数名用谓词（动词+名词）
+-类名采用驼峰形式 
+
+
+n=n+1   或者n+=1            n*=1  #等价于n=n*1
+赋值语句自右向左运算，首先取出n的值，再计算n+1的值得到11，最后11赋值给n
+
+标准算术运算符    + - * /    //  % **       
+5/2  值为2.5
+5//2 值为2   取整除 - 返回商的整数部分（向下取整）
+5%2 值为1  求余，也被称作模运算，结果为1  
+2**3 值为8   2的3次方，乘方、幂运算
+
+比较运算符
+<  <=   >   >=   ==  !=  <>    
+10<20<30  支持连续比较  
+10<20>15  相当于10<20 and 20>15   不推荐10<20>15这样的写
+
+逻辑运算符
+and  not  or  
+and  两边为true
+not 假变正
+or  一个为正就为正 
+
+
+
+######################################################################################
+
+
+今天写到   print()    input()
+  https://www.jianshu.com/      搜索“ python百例 "  从下面开始做  1-5 
+
+
+# print('hello world!')
+# if 3>0:
+#     print("ok")
+#     print("yes")
+#
+# x = 4
+# y = 5
+ 
+print("hello world!")                    
+print("hello","world!")             # 逗号自动添加默认的分隔符：空格
+print("hello"+"world")                # 加号表示字符拼接
+print("hello","world",sep="***")  #单词间用 *** 分隔
+print("#" * 50)                          #   *号表示重复50遍
+print("how are you?",end="")  #   默认print会打印回车，end=“ ” 表示不要回车
+
+number = input("请输入数字: ")  # input用于获取键盘输入
+print(number)
+print(type(number))  # input获得的数据是字符型
+print(number + 10)  # 报错，不能把字符和数字做运算
+print(int(number) + 10)  # int可将字符串10转换成数字10
+print(number + str(10))  # str将10转换为字符串后实现字符串拼接
+
+
+
+
+
+
+
+
